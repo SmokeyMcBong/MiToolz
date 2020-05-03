@@ -1,0 +1,427 @@
+﻿using OpenHardwareMonitor.Hardware;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+namespace MiToolz
+{
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private readonly Computer ThisPC;
+        static string ActiveProfile;
+        private static string StockProfile;
+        private static string OCProfile;
+        private static string SBControl_File;
+        private static string MSIAB_File;
+        private static string IsMonitoringEnabled;
+        private static bool NeedRestart = false;
+        private static readonly IniFile MyIni = new IniFile();
+        private static readonly Brush IndicatorReady = Brushes.Green;
+        private static readonly Brush IndicatorBusy = Brushes.Orange;
+        private static readonly int DelayS = 250;
+        private static readonly int DelayN = 1000;
+
+        public MainWindow()
+        {
+            StartupSetup();
+            InitializeComponent();
+            SetComboLists();
+            Indicator.Background = IndicatorReady;
+
+            //add MainWindow close event handler
+            Closed += new EventHandler(MainWindow_Closed);
+
+            //initialize OhM monitoring for GPU Core & Mem clocks
+            ThisPC = new Computer()
+            {
+                GPUEnabled = true
+            };
+
+            //show which profile is currently active
+            ShowActiveProfile();
+            //check and start frequency monitoring if enabled
+            CheckStartMonitor();
+        }
+
+        //app startup checks
+        private void StartupSetup()
+        {
+            //check for duplicate instances
+            if (Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location)).Count() > 1)
+            {
+                Process.GetCurrentProcess().Kill();
+            }
+
+            //check for ini file, if not found then create new file and write default values to it
+            string MyIniFile = Properties.Resources.MyIniFile;
+            string SBControl_FilePath = Properties.Resources.SBControl_FilePath;
+            string MSIAB_FilePath = Properties.Resources.MSIAB_FilePath;
+            string DefaultStockProfile = Properties.Resources.DefaultStockProfile;
+            string DefaultOCProfile = Properties.Resources.DefaultOCProfile;
+            IsMonitoringEnabled = "1";
+
+            if (!File.Exists(MyIniFile))
+            {
+                MyIni.Write("StockProfile", DefaultStockProfile);
+                MyIni.Write("OCProfile", DefaultOCProfile);
+                MyIni.Write("SBControl_File", SBControl_FilePath);
+                MyIni.Write("MSIAB_File", MSIAB_FilePath);
+                MyIni.Write("IsMonitoringEnabled", IsMonitoringEnabled);
+                ReadSettings();
+            }
+            else
+            {
+                ReadSettings();
+            }
+        }
+
+        //read in values from ini file
+        private void ReadSettings()
+        {
+            StockProfile = MyIni.Read("StockProfile");
+            OCProfile = MyIni.Read("OCProfile");
+            SBControl_File = MyIni.Read("SBControl_File");
+            MSIAB_File = MyIni.Read("MSIAB_File");
+            IsMonitoringEnabled = MyIni.Read("IsMonitoringEnabled");
+        }
+
+        //set if frequency monitoring is enabled and show if true
+        private void CheckStartMonitor()
+        {
+            if (IsMonitoringEnabled == "0")
+            {
+                Checkbox_EnableMonitor.IsChecked = false;
+            }
+            if (IsMonitoringEnabled == "1")
+            {
+                Checkbox_EnableMonitor.IsChecked = true;
+                StartOhMMonitor();
+            }
+        }
+
+        // Populate both ComboBox's
+        private void SetComboLists()
+        {
+            Combo_Stock.SelectedIndex = int.Parse(StockProfile) - 1;
+            Combo_OC.SelectedIndex = int.Parse(OCProfile) - 1;
+        }
+
+        //determin which profile is active by checking if power.limit is greater than defaul_power.limit
+        private void ShowActiveProfile()
+        {
+            Process ShowProfile_Process = new Process
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    Arguments = @"/c cd C:\Program Files\NVIDIA Corporation\NVSMI & nvidia-smi -i 0 --query-gpu=power.limit,power.default_limit --format=csv,noheader",
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true
+                }
+            };
+            ShowProfile_Process.Start();
+
+            ActiveProfile = ShowProfile_Process.StandardOutput.ReadToEnd();
+
+            string[] SplitData = ActiveProfile.Split(',');
+            string ActivePowerLimit = Regex.Replace(SplitData[0], "[^0-9]", "");
+            string DefaultPowerLimit = Regex.Replace(SplitData[1], "[^0-9]", "");
+            int ActivePLvalue = int.Parse(ActivePowerLimit);
+            int DefaultPLvalue = int.Parse(DefaultPowerLimit);
+
+            if (ActivePLvalue > DefaultPLvalue)
+            {
+                TextBlock_OC.Foreground = Brushes.White;
+                TextBlock_Stock.Foreground = Brushes.Black;
+            }
+            else
+            {
+                TextBlock_OC.Foreground = Brushes.Black;
+                TextBlock_Stock.Foreground = Brushes.White;
+            }
+
+            ShowProfile_Process.WaitForExit();
+        }
+
+        //start OhM GPU clock monitoring
+        private void StartOhMMonitor()
+        {
+            string CurCoreClock = "";
+            string CurMemClock = "";
+            int ClockMHz;
+
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(DelayS);
+
+                while (true)
+                {
+                    ThisPC.Open();
+
+                    foreach (IHardware hardware in ThisPC.Hardware)
+                    {
+                        hardware.Update();
+
+                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        {
+                            foreach (var sensor in hardware.Sensors)
+                            {
+                                if (sensor.SensorType == SensorType.Clock)
+                                {
+                                    if (sensor.Name.Contains("Core"))
+                                    {
+                                        if (sensor.Value.Value > 0)
+                                        {
+                                            ClockMHz = (int)Math.Round(sensor.Value.Value);
+                                            CurCoreClock = ClockMHz.ToString() + " Mhz";
+                                        }
+                                        else
+                                        {
+                                            CurCoreClock = " -no data- ";
+                                        }
+                                    }
+
+                                    if (sensor.Name.Contains("Memory"))
+                                    {
+                                        if (sensor.Value.Value > 0)
+                                        {
+                                            ClockMHz = (int)Math.Round(sensor.Value.Value);
+                                            CurMemClock = ClockMHz.ToString() + " Mhz";
+                                        }
+                                        else
+                                        {
+                                            CurMemClock = " -no data- ";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    ThisPC.Close();
+
+                    //update UI elements to show clock frequencies
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        //set coresponding text to reflect Core(CurCoreClock) & Memory(CurMemClock) clock speeds
+                        ShowCoreMhz.Text = CurCoreClock;
+                        ShowMemMhz.Text = CurMemClock;
+                    });
+                }
+            });
+        }
+
+        // Close MSIAfterburner
+        private void KillMSIAB()
+        {
+            foreach (var MSIAB_Process in Process.GetProcessesByName("MSIAfterburner"))
+            {
+                MSIAB_Process.Kill();
+            }
+        }
+
+        // Set Stock GPU profile
+        private void Button_SetStock_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyProfile("SetStock");
+        }
+
+        // Set Overclock GPU profile
+        private void Button_SetOC_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyProfile("SetOC");
+        }
+
+        //Apply selected profile
+        private void ApplyProfile(string Profile)
+        {
+            string Args = null;
+            Indicator.Background = IndicatorBusy;
+
+            if (Profile == "SetStock")
+            {
+                Args = "/Profile" + StockProfile;
+            }
+
+            if (Profile == "SetOC")
+            {
+                Args = "/Profile" + OCProfile;
+            }
+
+            //start MSIAfterburner using appropriate /profile switch
+            Process.Start(MSIAB_File, Args);
+
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(DelayN);
+
+                //after setting the profile terminate MSIAfterburner process
+                KillMSIAB();
+
+                // it only works in WPF
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    //change indicator elements on the UI thread.                   
+                    Indicator.Background = IndicatorReady;
+                    ShowActiveProfile();
+                });
+            });
+        }
+
+        // Open SoundBlaster Control Panel
+        private void Button_OpenSB_Click(object sender, RoutedEventArgs e)
+        {
+            Indicator.Background = IndicatorBusy;
+
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(DelayN);
+
+                // it only works in WPF
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    // Do something on the UI thread.
+                    Indicator.Background = IndicatorReady;
+                });
+            });
+
+            var SBControl_Process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = SBControl_File
+                }
+            };
+            SBControl_Process.Start();
+        }
+
+        //show/hide settings portion
+        private void Button_Expand_Click(object sender, RoutedEventArgs e)
+        {
+            ReadSettings();
+            SetComboLists();
+
+            if (IsMonitoringEnabled == "0")
+            {
+                Checkbox_EnableMonitor.IsChecked = false;
+            }
+            if (IsMonitoringEnabled == "1")
+            {
+                Checkbox_EnableMonitor.IsChecked = true;
+            }
+
+            double GetWindowWidth = Application.Current.MainWindow.Width;
+            double StandardWindowWidth = 394;
+            double ExtendedWindowWidth = 608;
+            string ImageResourcePath = "pack://siteoforigin:,,,/Resources/";
+
+            if (GetWindowWidth == StandardWindowWidth)
+            {
+                Button_Expand.Background = new ImageBrush(new BitmapImage(new Uri(ImageResourcePath + "Image_MenuRetract.png")));
+                Application.Current.MainWindow.Width = ExtendedWindowWidth;
+            }
+            else
+            {
+                Button_Expand.Background = new ImageBrush(new BitmapImage(new Uri(ImageResourcePath + "Image_MenuExpand.png")));
+                Application.Current.MainWindow.Width = StandardWindowWidth;
+            }
+        }
+
+        //save profile values to ini file
+        private void Button_SaveProfiles_Click(object sender, RoutedEventArgs e)
+        {
+            Indicator.Background = IndicatorBusy;
+
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(DelayS);
+
+                // it only works in WPF
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    // Do something on the UI thread.
+                    Indicator.Background = IndicatorReady;
+                });
+            });
+
+            var GetComboStockValue = Combo_Stock.SelectedIndex + 1;
+            var GetComboOCValue = Combo_OC.SelectedIndex + 1;
+            MyIni.Write("StockProfile", GetComboStockValue.ToString());
+            MyIni.Write("OCProfile", GetComboOCValue.ToString());
+
+            if (Checkbox_EnableMonitor.IsChecked == false)
+            {
+                MyIni.Write("IsMonitoringEnabled", "0");
+            }
+            if (Checkbox_EnableMonitor.IsChecked == true)
+            {
+                MyIni.Write("IsMonitoringEnabled", "1");
+            }
+
+            if (NeedRestart == false)
+            {
+                ReadSettings();
+            }
+            if (NeedRestart == true)
+            {
+                //restart app to apply frequency monitor setting
+                Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
+            }
+        }
+
+        //open MSIAfterburner application
+        private void Button_OpenMSIAB_Click(object sender, RoutedEventArgs e)
+        {
+            Indicator.Background = IndicatorBusy;
+
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(DelayN);
+
+                // it only works in WPF
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    // Do something on the UI thread.
+                    Indicator.Background = IndicatorReady;
+                });
+            });
+
+            var MSIAB_Process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = MSIAB_File
+                }
+            };
+            MSIAB_Process.Start();
+        }
+
+        //MainWindow close application event handler
+        void MainWindow_Closed(object sender, EventArgs e)
+        {
+            //close OhM monitoring when exiting
+            ThisPC.Close();
+            Close();
+        }
+
+        //set restart app flag when checkbox has been clicked/changed
+        private void Checkbox_EnableMonitor_Clicked(object sender, RoutedEventArgs e)
+        {
+            NeedRestart = true;
+        }
+    }
+}
