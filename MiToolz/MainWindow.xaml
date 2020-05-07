@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MiToolz" Height="260" Width="394" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="MiToolz" Height="260" Width="394" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Activated="Window_Activated">
     <Grid Background="Gray">
         <Button x:Name="Button_Stock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="29,29,0,0" Click="Button_SetStock_Click">
             <Button.Background>
@@ -32,7 +32,7 @@
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="1" Margin="131,35,0,0"/>
         <TextBlock x:Name="TextBlock_Stock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Stock Profile" VerticalAlignment="Top" Margin="29,32,0,0" Width="94" TextAlignment="Center"/>
         <TextBlock x:Name="TextBlock_OC" HorizontalAlignment="Left" TextWrapping="Wrap" Text="OC Profile" VerticalAlignment="Top" Margin="139,32,0,0" Width="94" TextAlignment="Center"/>
-        <TextBlock x:Name="TextBlock_Sound" HorizontalAlignment="Left" TextWrapping="Wrap" Text="SoundBlaster" VerticalAlignment="Top" Margin="254,32,0,0" Width="94" TextAlignment="Center"/>
+        <TextBlock x:Name="TextBlock_Sound" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="254,32,0,0" Width="94" TextAlignment="Center" Foreground="White"/>
         <Button x:Name="Button_Expand" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="18" Height="19" Margin="357,2,0,0" Click="Button_Expand_Click">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MenuExpand.png">
@@ -64,7 +64,7 @@
             </Grid>
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="189" Margin="380,179,0,0">
-            <TextBlock ToolTip=" Build Date : 03-05-2020  " Text=" MiToolz  v2.6.1 " HorizontalAlignment="Left" TextWrapping="Wrap" Width="189" TextAlignment="Center" Margin="-1,0,-1,2" Height="16" VerticalAlignment="Center"/>
+            <TextBlock ToolTip="{DynamicResource VersionDate}" Text="{DynamicResource VersionNo}" HorizontalAlignment="Left" TextWrapping="Wrap" Width="189" TextAlignment="Center" Margin="-1,0,-1,2" Height="16" VerticalAlignment="Center"/>
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="1" Margin="477,84,0,0"/>
         <Button x:Name="Button_SaveProfiles" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="541,28,0,0" Click="Button_SaveProfiles_Click">
@@ -84,7 +84,7 @@
         </Border>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Core Clock:" VerticalAlignment="Top" Margin="49,168,0,0" Width="69" TextAlignment="Center" FontSize="11"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Memory Clock:" VerticalAlignment="Top" Margin="190,168,0,0" Width="74" TextAlignment="Center" FontSize="11"/>
-        <TextBlock x:Name="ShowCoreMhz" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ---- " VerticalAlignment="Top" Margin="117,168,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
-        <TextBlock x:Name="ShowMemMhz" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ---- " VerticalAlignment="Top" Margin="270,168,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <TextBlock x:Name="ShowCoreMhz" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="117,168,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <TextBlock x:Name="ShowMemMhz" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="270,168,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
     </Grid>
 </Window>

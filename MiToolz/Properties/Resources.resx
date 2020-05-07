@@ -148,10 +148,16 @@
   <data name="MSIAB_FilePath" xml:space="preserve">
     <value>C:\Program Files (x86)\MSI Afterburner\MSIAfterburner.exe</value>
   </data>
-  <data name="MyIniFile" xml:space="preserve">
+  <data name="MyConfigManager" xml:space="preserve">
     <value>MiToolz.ini</value>
   </data>
   <data name="SBControl_FilePath" xml:space="preserve">
     <value>C:\Program Files (x86)\Creative\Sound Blaster Audigy Fx\Sound Blaster Audigy Fx Control Panel\SBAdgyFx.exe</value>
+  </data>
+  <data name="SBControl_ProfileFilePath" xml:space="preserve">
+    <value>AppData\Local\Creative\Sound Blaster Audigy Fx Control Panel\profile\</value>
+  </data>
+  <data name="SBControl_ProfileRegPath" xml:space="preserve">
+    <value>Software\Creative Tech\Sound Blaster Audigy Fx Control Panel\Settings\</value>
   </data>
 </root>

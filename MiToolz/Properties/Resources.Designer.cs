@@ -160,9 +160,9 @@ namespace MiToolz.Properties {
         /// <summary>
         ///   Looks up a localized string similar to MiToolz.ini.
         /// </summary>
-        internal static string MyIniFile {
+        internal static string MyConfigManager {
             get {
-                return ResourceManager.GetString("MyIniFile", resourceCulture);
+                return ResourceManager.GetString("MyConfigManager", resourceCulture);
             }
         }
         
@@ -172,6 +172,24 @@ namespace MiToolz.Properties {
         internal static string SBControl_FilePath {
             get {
                 return ResourceManager.GetString("SBControl_FilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AppData\Local\Creative\Sound Blaster Audigy Fx Control Panel\profile\.
+        /// </summary>
+        internal static string SBControl_ProfileFilePath {
+            get {
+                return ResourceManager.GetString("SBControl_ProfileFilePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software\Creative Tech\Sound Blaster Audigy Fx Control Panel\Settings\.
+        /// </summary>
+        internal static string SBControl_ProfileRegPath {
+            get {
+                return ResourceManager.GetString("SBControl_ProfileRegPath", resourceCulture);
             }
         }
     }

@@ -22,10 +22,11 @@ namespace MiToolz
         private static string StockProfile;
         private static string OCProfile;
         private static string SBControl_File;
+        static string SBControl_ActiveProfile;
         private static string MSIAB_File;
         private static string IsMonitoringEnabled;
         private static bool NeedRestart = false;
-        private static readonly IniFile MyIni = new IniFile();
+        private static readonly ConfigManager ConfigManager = new ConfigManager();
         private static readonly Brush IndicatorReady = Brushes.Green;
         private static readonly Brush IndicatorBusy = Brushes.Orange;
         private static readonly int DelayS = 250;
@@ -33,9 +34,13 @@ namespace MiToolz
 
         public MainWindow()
         {
-            StartupSetup();
             InitializeComponent();
+
+            //run startup checks, read all config settings and show on UI elements
+            StartupSetup();
             SetComboLists();
+            ShowActiveSoundProfile();
+            ShowActiveMSIabProfile();
             Indicator.Background = IndicatorReady;
 
             //add MainWindow close event handler
@@ -47,9 +52,6 @@ namespace MiToolz
                 GPUEnabled = true
             };
 
-            //show which profile is currently active
-            ShowActiveProfile();
-            //check and start frequency monitoring if enabled
             CheckStartMonitor();
         }
 
@@ -63,20 +65,20 @@ namespace MiToolz
             }
 
             //check for ini file, if not found then create new file and write default values to it
-            string MyIniFile = Properties.Resources.MyIniFile;
+            string MyConfigManager = Properties.Resources.MyConfigManager;
             string SBControl_FilePath = Properties.Resources.SBControl_FilePath;
             string MSIAB_FilePath = Properties.Resources.MSIAB_FilePath;
             string DefaultStockProfile = Properties.Resources.DefaultStockProfile;
             string DefaultOCProfile = Properties.Resources.DefaultOCProfile;
             IsMonitoringEnabled = "1";
 
-            if (!File.Exists(MyIniFile))
+            if (!File.Exists(MyConfigManager))
             {
-                MyIni.Write("StockProfile", DefaultStockProfile);
-                MyIni.Write("OCProfile", DefaultOCProfile);
-                MyIni.Write("SBControl_File", SBControl_FilePath);
-                MyIni.Write("MSIAB_File", MSIAB_FilePath);
-                MyIni.Write("IsMonitoringEnabled", IsMonitoringEnabled);
+                ConfigManager.IniWrite("StockProfile", DefaultStockProfile);
+                ConfigManager.IniWrite("OCProfile", DefaultOCProfile);
+                ConfigManager.IniWrite("SBControl_File", SBControl_FilePath);
+                ConfigManager.IniWrite("MSIAB_File", MSIAB_FilePath);
+                ConfigManager.IniWrite("IsMonitoringEnabled", IsMonitoringEnabled);
                 ReadSettings();
             }
             else
@@ -88,11 +90,32 @@ namespace MiToolz
         //read in values from ini file
         private void ReadSettings()
         {
-            StockProfile = MyIni.Read("StockProfile");
-            OCProfile = MyIni.Read("OCProfile");
-            SBControl_File = MyIni.Read("SBControl_File");
-            MSIAB_File = MyIni.Read("MSIAB_File");
-            IsMonitoringEnabled = MyIni.Read("IsMonitoringEnabled");
+            StockProfile = ConfigManager.IniRead("StockProfile");
+            OCProfile = ConfigManager.IniRead("OCProfile");
+            SBControl_File = ConfigManager.IniRead("SBControl_File");
+            MSIAB_File = ConfigManager.IniRead("MSIAB_File");
+            IsMonitoringEnabled = ConfigManager.IniRead("IsMonitoringEnabled");
+
+            string SBControl_ProfileFilePath = Properties.Resources.SBControl_ProfileFilePath;
+            string SBControl_ProfileRegPath = Properties.Resources.SBControl_ProfileRegPath;
+
+            //full path to profile folder
+            string WinUname = Environment.UserName;
+            string SBPAth = @"C:\Users\" + WinUname + @"\" + SBControl_ProfileFilePath;
+
+            //get folder name of subfolder (HDAUDIO_VEN_10EC_DEV_0899_SUBSYS_11020041 etc)
+            string[] SBGetIDDir = Directory.GetDirectories(SBPAth, "HDAUDIO*", SearchOption.TopDirectoryOnly);
+            string SBDeviceIDPath = string.Join("", SBGetIDDir);
+            string SBDeviceID = SBDeviceIDPath.Substring(SBDeviceIDPath.LastIndexOf(@"\") + 1);
+
+            //get registry key value for active profile
+            string SBRegKeyName = SBControl_ProfileRegPath + SBDeviceID;
+            string SBGetValue = ConfigManager.RegReadKeyValue(SBRegKeyName, "Profile");
+            string SBRegKeyValue = SBGetValue.Substring(SBGetValue.LastIndexOf(@"\") + 1);
+
+            //read profile xml and extract profile_name value
+            string FullXmlFilePath = SBDeviceIDPath + @"\" + SBRegKeyValue;
+            SBControl_ActiveProfile = ConfigManager.XmlRead(FullXmlFilePath);
         }
 
         //set if frequency monitoring is enabled and show if true
@@ -116,8 +139,14 @@ namespace MiToolz
             Combo_OC.SelectedIndex = int.Parse(OCProfile) - 1;
         }
 
+        //show which Audio profile is active
+        private void ShowActiveSoundProfile()
+        {
+            TextBlock_Sound.Text = SBControl_ActiveProfile;
+        }
+
         //determin which profile is active by checking if power.limit is greater than defaul_power.limit
-        private void ShowActiveProfile()
+        private void ShowActiveMSIabProfile()
         {
             Process ShowProfile_Process = new Process
             {
@@ -276,7 +305,7 @@ namespace MiToolz
                 {
                     //change indicator elements on the UI thread.                   
                     Indicator.Background = IndicatorReady;
-                    ShowActiveProfile();
+                    ShowActiveMSIabProfile();
                 });
             });
         }
@@ -359,16 +388,16 @@ namespace MiToolz
 
             var GetComboStockValue = Combo_Stock.SelectedIndex + 1;
             var GetComboOCValue = Combo_OC.SelectedIndex + 1;
-            MyIni.Write("StockProfile", GetComboStockValue.ToString());
-            MyIni.Write("OCProfile", GetComboOCValue.ToString());
+            ConfigManager.IniWrite("StockProfile", GetComboStockValue.ToString());
+            ConfigManager.IniWrite("OCProfile", GetComboOCValue.ToString());
 
             if (Checkbox_EnableMonitor.IsChecked == false)
             {
-                MyIni.Write("IsMonitoringEnabled", "0");
+                ConfigManager.IniWrite("IsMonitoringEnabled", "0");
             }
             if (Checkbox_EnableMonitor.IsChecked == true)
             {
-                MyIni.Write("IsMonitoringEnabled", "1");
+                ConfigManager.IniWrite("IsMonitoringEnabled", "1");
             }
 
             if (NeedRestart == false)
@@ -410,6 +439,12 @@ namespace MiToolz
             MSIAB_Process.Start();
         }
 
+        //set restart app flag when checkbox has been clicked/changed
+        private void Checkbox_EnableMonitor_Clicked(object sender, RoutedEventArgs e)
+        {
+            NeedRestart = true;
+        }
+
         //MainWindow close application event handler
         void MainWindow_Closed(object sender, EventArgs e)
         {
@@ -418,10 +453,12 @@ namespace MiToolz
             Close();
         }
 
-        //set restart app flag when checkbox has been clicked/changed
-        private void Checkbox_EnableMonitor_Clicked(object sender, RoutedEventArgs e)
+        //reflect updated settings in UI when window is re-focused
+        private void Window_Activated(object sender, EventArgs e)
         {
-            NeedRestart = true;
+            ReadSettings();
+            SetComboLists();
+            ShowActiveSoundProfile();
         }
     }
 }
