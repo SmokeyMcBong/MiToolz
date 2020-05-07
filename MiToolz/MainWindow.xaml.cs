@@ -1,4 +1,4 @@
-﻿using OpenHardwareMonitor.Hardware;
+﻿using LibreHardwareMonitor.Hardware;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -28,9 +28,10 @@ namespace MiToolz
         private static bool NeedRestart = false;
         private static readonly ConfigManager ConfigManager = new ConfigManager();
         private static readonly Brush IndicatorReady = Brushes.Green;
-        private static readonly Brush IndicatorBusy = Brushes.Orange;
+        private static readonly Brush IndicatorBusy = Brushes.DarkOrange;
         private static readonly int DelayS = 250;
-        private static readonly int DelayN = 1000;
+        private static readonly int DelayN = 500;
+        private static readonly int DelayL = 1000;
 
         public MainWindow()
         {
@@ -49,7 +50,7 @@ namespace MiToolz
             //initialize OhM monitoring for GPU Core & Mem clocks
             ThisPC = new Computer()
             {
-                GPUEnabled = true
+                IsGpuEnabled = true
             };
 
             CheckStartMonitor();
@@ -103,12 +104,12 @@ namespace MiToolz
             string WinUname = Environment.UserName;
             string SBPAth = @"C:\Users\" + WinUname + @"\" + SBControl_ProfileFilePath;
 
-            //get folder name of subfolder (HDAUDIO_VEN_10EC_DEV_0899_SUBSYS_11020041 etc)
+            //get folder name of subfolder/deviceID (HDAUDIO_VEN_10EC_DEV_0899_SUBSYS_11020041 etc)
             string[] SBGetIDDir = Directory.GetDirectories(SBPAth, "HDAUDIO*", SearchOption.TopDirectoryOnly);
             string SBDeviceIDPath = string.Join("", SBGetIDDir);
             string SBDeviceID = SBDeviceIDPath.Substring(SBDeviceIDPath.LastIndexOf(@"\") + 1);
 
-            //get registry key value for active profile
+            //get registry key value for active profile using deviceID
             string SBRegKeyName = SBControl_ProfileRegPath + SBDeviceID;
             string SBGetValue = ConfigManager.RegReadKeyValue(SBRegKeyName, "Profile");
             string SBRegKeyValue = SBGetValue.Substring(SBGetValue.LastIndexOf(@"\") + 1);
@@ -185,21 +186,23 @@ namespace MiToolz
             ShowProfile_Process.WaitForExit();
         }
 
-        //start OhM GPU clock monitoring
+        //start OhM GPU monitoring
         private void StartOhMMonitor()
         {
             string CurCoreClock = "";
             string CurMemClock = "";
-            int ClockMHz;
+            string CurGpuTemp = "";
+            string CurGpuLoad = "";
+            string CurMemLoad = "";
+            string CurGpuPower = "";
+            int RoundValue;
 
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(DelayS);
+                ThisPC.Open();
 
                 while (true)
                 {
-                    ThisPC.Open();
-
                     foreach (IHardware hardware in ThisPC.Hardware)
                     {
                         hardware.Update();
@@ -212,10 +215,10 @@ namespace MiToolz
                                 {
                                     if (sensor.Name.Contains("Core"))
                                     {
-                                        if (sensor.Value.Value > 0)
+                                        if (sensor.Value.Value >= 0)
                                         {
-                                            ClockMHz = (int)Math.Round(sensor.Value.Value);
-                                            CurCoreClock = ClockMHz.ToString() + " Mhz";
+                                            RoundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                            CurCoreClock = RoundValue.ToString() + " Mhz";
                                         }
                                         else
                                         {
@@ -225,10 +228,10 @@ namespace MiToolz
 
                                     if (sensor.Name.Contains("Memory"))
                                     {
-                                        if (sensor.Value.Value > 0)
+                                        if (sensor.Value.Value >= 0)
                                         {
-                                            ClockMHz = (int)Math.Round(sensor.Value.Value);
-                                            CurMemClock = ClockMHz.ToString() + " Mhz";
+                                            RoundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                            CurMemClock = RoundValue.ToString() + " Mhz";
                                         }
                                         else
                                         {
@@ -236,19 +239,80 @@ namespace MiToolz
                                         }
                                     }
                                 }
+
+                                if (sensor.SensorType == SensorType.Temperature)
+                                {
+                                    if (sensor.Name.Contains("Core"))
+                                    {
+                                        if (sensor.Value.Value >= 0)
+                                        {
+                                            CurGpuTemp = sensor.Value.GetValueOrDefault().ToString() + " °C";
+                                        }
+                                        else
+                                        {
+                                            CurGpuTemp = " -no data- ";
+                                        }
+                                    }
+                                }
+
+                                if (sensor.SensorType == SensorType.Load)
+                                {
+                                    if (sensor.Name.Contains("Core"))
+                                    {
+                                        if (sensor.Value.Value >= 0)
+                                        {
+                                            CurGpuLoad = sensor.Value.GetValueOrDefault().ToString() + " %";
+                                        }
+                                        else
+                                        {
+                                            CurGpuLoad = " -no data- ";
+                                        }
+                                    }
+
+                                    if (sensor.Name.Contains("Memory Controller"))
+                                    {
+                                        if (sensor.Value.Value >= 0)
+                                        {
+                                            CurMemLoad = sensor.Value.GetValueOrDefault().ToString() + " %";
+                                        }
+                                        else
+                                        {
+                                            CurMemLoad = " -no data- ";
+                                        }
+                                    }
+                                }
+
+                                if (sensor.SensorType == SensorType.Power)
+                                {
+                                    if (sensor.Name.Contains("GPU Package"))
+                                    {
+                                        if (sensor.Value.Value >= 0)
+                                        {
+                                            RoundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                            CurGpuPower = RoundValue.ToString() + " W";
+                                        }
+                                        else
+                                        {
+                                            CurGpuPower = " -no data- ";
+                                        }
+                                    }
+                                }
                             }
+
+                            //update UI elements to show clock frequencies
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                //set coresponding UI elements with GPU data values
+                                ShowCoreMhz.Text = CurCoreClock;
+                                ShowMemMhz.Text = CurMemClock;
+                                ShowGpuTemp.Text = CurGpuTemp;
+                                ShowGpuLoad.Text = CurGpuLoad;
+                                ShowMemLoad.Text = CurMemLoad;
+                                ShowGpuPower.Text = CurGpuPower;
+                            });
                         }
                     }
-
-                    ThisPC.Close();
-
-                    //update UI elements to show clock frequencies
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        //set coresponding text to reflect Core(CurCoreClock) & Memory(CurMemClock) clock speeds
-                        ShowCoreMhz.Text = CurCoreClock;
-                        ShowMemMhz.Text = CurMemClock;
-                    });
+                    await Task.Delay(DelayN);
                 }
             });
         }
@@ -295,7 +359,7 @@ namespace MiToolz
 
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(DelayN);
+                await Task.Delay(DelayL);
 
                 //after setting the profile terminate MSIAfterburner process
                 KillMSIAB();
@@ -317,7 +381,7 @@ namespace MiToolz
 
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(DelayN);
+                await Task.Delay(DelayL);
 
                 // it only works in WPF
                 Application.Current.Dispatcher.Invoke(() =>
@@ -419,7 +483,7 @@ namespace MiToolz
 
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(DelayN);
+                await Task.Delay(DelayL);
 
                 // it only works in WPF
                 Application.Current.Dispatcher.Invoke(() =>

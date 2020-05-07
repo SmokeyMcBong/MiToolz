@@ -4,87 +4,93 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MiToolz" Height="260" Width="394" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Activated="Window_Activated">
+        Title="MiToolz" Height="290" Width="394" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Activated="Window_Activated" Icon="pack://siteoforigin:,,,/Resources/AppIcon.ico">
     <Grid Background="Gray">
-        <Button x:Name="Button_Stock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="29,29,0,0" Click="Button_SetStock_Click">
+        <Button x:Name="Button_Stock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="29,29,0,0" Click="Button_SetStock_Click" Cursor="Hand">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_GPU.png" Opacity="0.9"/>
             </Button.Background>
         </Button>
-        <Button x:Name="Button_Overclock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="139,29,0,0" Click="Button_SetOC_Click">
+        <Button x:Name="Button_Overclock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="139,29,0,0" Click="Button_SetOC_Click" Cursor="Hand">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_GPU.png" Opacity="0.9"/>
             </Button.Background>
         </Button>
-        <Button x:Name="Button_Sound" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="254,29,0,0" Click="Button_OpenSB_Click">
+        <Button x:Name="Button_Sound" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="254,29,0,0" Click="Button_OpenSB_Click" Cursor="Hand">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_Audio.png"/>
             </Button.Background>
         </Button>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="107" VerticalAlignment="Top" Width="216" Margin="23,23,0,0"/>
-        <Border CornerRadius="2" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="14" VerticalAlignment="Top" Width="331" Margin="23,135,0,0">
-            <TextBox x:Name="Indicator" HorizontalAlignment="Left" TextWrapping="Wrap" Width="329" IsEnabled="False"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="107" VerticalAlignment="Top" Width="216" Margin="23,23,0,0" CornerRadius="6"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="107" VerticalAlignment="Top" Width="106" Margin="248,23,0,0" CornerRadius="6">
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="94" Margin="5,5,0,0" CornerRadius="3"/>
         </Border>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="107" VerticalAlignment="Top" Width="106" Margin="248,23,0,0">
-            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="94" Margin="5,5,0,0"/>
-        </Border>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="94" Margin="139,29,0,0"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="94" Margin="139,29,0,0" CornerRadius="3"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="84" VerticalAlignment="Top" Width="1" Margin="131,35,0,0"/>
         <TextBlock x:Name="TextBlock_Stock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Stock Profile" VerticalAlignment="Top" Margin="29,32,0,0" Width="94" TextAlignment="Center"/>
         <TextBlock x:Name="TextBlock_OC" HorizontalAlignment="Left" TextWrapping="Wrap" Text="OC Profile" VerticalAlignment="Top" Margin="139,32,0,0" Width="94" TextAlignment="Center"/>
         <TextBlock x:Name="TextBlock_Sound" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="254,32,0,0" Width="94" TextAlignment="Center" Foreground="White"/>
-        <Button x:Name="Button_Expand" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="18" Height="19" Margin="357,2,0,0" Click="Button_Expand_Click">
+        <Button x:Name="Button_Expand" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="18" Height="19" Margin="357,2,0,0" Click="Button_Expand_Click" Cursor="Hand">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MenuExpand.png">
                 </ImageBrush>
             </Button.Background>
         </Button>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="151" VerticalAlignment="Top" Width="189" Margin="380,23,0,0">
-            <Grid HorizontalAlignment="Left" Height="151" VerticalAlignment="Top" Width="189" Margin="-1">
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="183" VerticalAlignment="Top" Width="189" Margin="380,23,0,0" CornerRadius="6">
+            <Grid HorizontalAlignment="Left" Height="141" VerticalAlignment="Top" Width="189" Margin="-1,-1,-1,0">
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Settings" VerticalAlignment="Top" Margin="30,9,0,0" Width="129" TextAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Stock Profile" VerticalAlignment="Top" Margin="24,53,0,0" FontSize="11"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="OC Profile" VerticalAlignment="Top" Margin="114,53,0,0" FontSize="11"/>
-                <ComboBox x:Name="Combo_Stock" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Margin="30,73,0,0">
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Stock Profile" VerticalAlignment="Top" Margin="24,68,0,0" FontSize="11"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="OC Profile" VerticalAlignment="Top" Margin="114,68,0,0" FontSize="11"/>
+                <ComboBox x:Name="Combo_Stock" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Margin="30,91,0,0" Cursor="Hand">
                     <ComboBoxItem Content="1"></ComboBoxItem>
                     <ComboBoxItem Content="2"></ComboBoxItem>
                     <ComboBoxItem Content="3"></ComboBoxItem>
                     <ComboBoxItem Content="4"></ComboBoxItem>
                     <ComboBoxItem Content="5"></ComboBoxItem>
                 </ComboBox>
-                <ComboBox x:Name="Combo_OC" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="47" Margin="116,73,0,0">
+                <ComboBox x:Name="Combo_OC" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="47" Margin="116,91,0,0" Cursor="Hand">
                     <ComboBoxItem Content="1"></ComboBoxItem>
                     <ComboBoxItem Content="2"></ComboBoxItem>
                     <ComboBoxItem Content="3"></ComboBoxItem>
                     <ComboBoxItem Content="4"></ComboBoxItem>
                     <ComboBoxItem Content="5"></ComboBoxItem>
                 </ComboBox>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="- MSIAfterburner Profiles -" VerticalAlignment="Top" Margin="0,31,0,0" Width="189" TextAlignment="Center" FontSize="11"/>
-                <CheckBox x:Name="Checkbox_EnableMonitor" IsChecked="True" Content="Enable Frequency Monitoring" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,114,0,0" Width="163" FontSize="10" Height="18" Click="Checkbox_EnableMonitor_Clicked"/>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ( Needs app restart to take effect ) " VerticalAlignment="Top" Margin="24,127,0,0" Width="155" TextAlignment="Center" FontSize="9" Height="14"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="- MSIAfterburner Profiles -" VerticalAlignment="Top" Margin="0,41,0,0" Width="189" TextAlignment="Center" FontSize="11"/>
             </Grid>
         </Border>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="189" Margin="380,179,0,0">
-            <TextBlock ToolTip="{DynamicResource VersionDate}" Text="{DynamicResource VersionNo}" HorizontalAlignment="Left" TextWrapping="Wrap" Width="189" TextAlignment="Center" Margin="-1,0,-1,2" Height="16" VerticalAlignment="Center"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="189" Margin="380,211,0,0" CornerRadius="6">
+            <TextBlock ToolTip="{DynamicResource VersionDate}" Text="{DynamicResource VersionNo}" HorizontalAlignment="Left" TextWrapping="Wrap" Width="189" TextAlignment="Center" Margin="-1,0,-1,2" Height="16" VerticalAlignment="Center" Cursor="Help"/>
         </Border>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="40" VerticalAlignment="Top" Width="1" Margin="477,84,0,0"/>
-        <Button x:Name="Button_SaveProfiles" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="541,28,0,0" Click="Button_SaveProfiles_Click">
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Width="1" Margin="477,92,0,0"/>
+        <Button x:Name="Button_SaveProfiles" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="541,28,0,0" Click="Button_SaveProfiles_Click" Cursor="Hand">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_SaveIni.png" Opacity="0.75"/>
             </Button.Background>
         </Button>
-        <Button x:Name="Button_OpenMSIAB" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="386,28,0,0" Click="Button_OpenMSIAB_Click">
+        <Button x:Name="Button_OpenMSIAB" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="386,28,0,0" Click="Button_OpenMSIAB_Click" Cursor="Hand">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MSIab.png" Opacity="0.45"/>
             </Button.Background>
         </Button>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="94" Margin="29,29,0,0"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="45" VerticalAlignment="Top" Width="331" Margin="23,154,0,0"/>
-        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="33" VerticalAlignment="Top" Width="319" Margin="29,160,0,0">
-            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="1" Margin="148,9,0,0"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="94" Margin="29,29,0,0" CornerRadius="3"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="331" Margin="23,154,0,0" CornerRadius="6"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="65" VerticalAlignment="Top" Width="319" Margin="29,160,0,0" CornerRadius="3">
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Controller Load:" VerticalAlignment="Top" Width="85" TextAlignment="Center" FontSize="11" Margin="155,38,0,0"/>
         </Border>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Core Clock:" VerticalAlignment="Top" Margin="49,168,0,0" Width="69" TextAlignment="Center" FontSize="11"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Temperature:" VerticalAlignment="Top" Margin="49,184,0,0" Width="69" TextAlignment="Center" FontSize="11"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Memory Clock:" VerticalAlignment="Top" Margin="190,168,0,0" Width="74" TextAlignment="Center" FontSize="11"/>
-        <TextBlock x:Name="ShowCoreMhz" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="117,168,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Power Usage:" VerticalAlignment="Top" Margin="190,184,0,0" Width="74" TextAlignment="Center" FontSize="11"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Core Load:" VerticalAlignment="Top" Margin="49,199,0,0" Width="69" TextAlignment="Center" FontSize="11"/>
+        <TextBlock x:Name="ShowCoreMhz" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="120,168,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
         <TextBlock x:Name="ShowMemMhz" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="270,168,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <TextBlock x:Name="ShowGpuTemp" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="120,184,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <TextBlock x:Name="ShowGpuPower" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="270,184,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <TextBlock x:Name="ShowGpuLoad" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="120,199,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <TextBlock x:Name="ShowMemLoad" HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ----- " VerticalAlignment="Top" Margin="270,199,0,0" Width="50" TextAlignment="Center" Height="15" FontSize="11" Foreground="White"/>
+        <Border x:Name="Indicator" CornerRadius="4" BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="14" VerticalAlignment="Top" Width="331" Margin="23,135,0,0">
+        </Border>
+        <CheckBox x:Name="Checkbox_EnableMonitor" IsChecked="True" Content="Enable Frequency Monitoring" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="395,164,0,0" Width="163" FontSize="10" Height="18" Click="Checkbox_EnableMonitor_Clicked" Cursor="Hand"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text=" ( Needs app restart to take effect ) " VerticalAlignment="Top" Margin="403,177,0,0" Width="155" TextAlignment="Center" FontSize="9" Height="14"/>
     </Grid>
 </Window>

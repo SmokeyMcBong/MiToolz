@@ -4,7 +4,7 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="MiToolz.App"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <System:String x:Key="VersionNo" xml:space="preserve">  MiToolz  v2.7.0  </System:String>
+        <System:String x:Key="VersionNo" xml:space="preserve">  MiToolz  v2.8.0  </System:String>
         <System:String x:Key="VersionDate" xml:space="preserve">  Build Date : 07-05-2020  </System:String>
     </Application.Resources>
 </Application>
