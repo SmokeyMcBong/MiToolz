@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MiToolz" Height="290" Width="394" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Activated="Window_Activated" Icon="pack://siteoforigin:,,,/Resources/AppIcon.ico">
+        Title="MiToolz" Height="{DynamicResource StandardWindowHeight}" Width="{DynamicResource StandardWindowWidth}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Activated="Window_Activated" Icon="pack://siteoforigin:,,,/Resources/AppIcon.ico">
     <Grid Background="Gray">
         <Button x:Name="Button_Stock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="29,29,0,0" Click="Button_SetStock_Click" Cursor="Hand">
             <Button.Background>

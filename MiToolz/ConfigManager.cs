@@ -75,8 +75,6 @@ namespace MiToolz
         {
             string str = string.Empty;
 
-            //read xml entry for 'profile_name' in xml located in 'FullXmlFilePath' return profile name value
-
             XDocument doc = XDocument.Load(FullXmlFilePath);
             var selectors = from elements in doc.Elements("profile").Elements("info")
                             select elements;
@@ -84,7 +82,6 @@ namespace MiToolz
             foreach (var element in selectors)
             {
                 str = element.Element("profile_name").Value;
-                //MessageBox.Show(element.Element("profile_name").Value);
             }
 
             return str;

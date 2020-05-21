@@ -191,12 +191,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>cd $(OutDir)
-del HidLibrary.dll
-del HidLibrary.pdb
-del Microsoft.Win32.Registry.dll
-del System.IO.Ports.dll
-del System.Security.AccessControl.dll
-del System.Security.Principal.Windows.dll</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

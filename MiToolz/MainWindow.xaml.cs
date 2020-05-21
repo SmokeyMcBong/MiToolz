@@ -12,9 +12,6 @@ using System.Windows.Media.Imaging;
 
 namespace MiToolz
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly Computer ThisPC;
@@ -37,7 +34,7 @@ namespace MiToolz
         {
             InitializeComponent();
 
-            //run startup checks, read all config settings and show on UI elements
+            //run startup checks, read all config settings and set corresponding UI elements
             StartupSetup();
             SetComboLists();
             ShowActiveSoundProfile();
@@ -47,13 +44,13 @@ namespace MiToolz
             //add MainWindow close event handler
             Closed += new EventHandler(MainWindow_Closed);
 
-            //initialize OhM monitoring for GPU Core & Mem clocks
+            //initialize OhM monitoring for GPU 
             ThisPC = new Computer()
             {
                 IsGpuEnabled = true
             };
 
-            CheckStartMonitor();
+            IsMonitorEnabled();
         }
 
         //app startup checks
@@ -101,8 +98,8 @@ namespace MiToolz
             string SBControl_ProfileRegPath = Properties.Resources.SBControl_ProfileRegPath;
 
             //full path to profile folder
-            string WinUname = Environment.UserName;
-            string SBPAth = @"C:\Users\" + WinUname + @"\" + SBControl_ProfileFilePath;
+            string UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string SBPAth = UserProfile + @"\" + SBControl_ProfileFilePath;
 
             //get folder name of subfolder/deviceID (HDAUDIO_VEN_10EC_DEV_0899_SUBSYS_11020041 etc)
             string[] SBGetIDDir = Directory.GetDirectories(SBPAth, "HDAUDIO*", SearchOption.TopDirectoryOnly);
@@ -119,8 +116,8 @@ namespace MiToolz
             SBControl_ActiveProfile = ConfigManager.XmlRead(FullXmlFilePath);
         }
 
-        //set if frequency monitoring is enabled and show if true
-        private void CheckStartMonitor()
+        //set if gpu monitoring is enabled and show if true
+        private void IsMonitorEnabled()
         {
             if (IsMonitoringEnabled == "0")
             {
@@ -149,6 +146,11 @@ namespace MiToolz
         //determin which profile is active by checking if power.limit is greater than defaul_power.limit
         private void ShowActiveMSIabProfile()
         {
+            string ProgramFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            string NVsmiPath = ProgramFiles + @"\NVIDIA Corporation\NVSMI";
+            string NVsmiQuery = "nvidia-smi -i 0 --query-gpu=power.limit,power.default_limit --format=csv,noheader";
+            string FullCmdArgs = @"/c cd " + NVsmiPath + " & " + NVsmiQuery;
+
             Process ShowProfile_Process = new Process
             {
                 StartInfo = new ProcessStartInfo()
@@ -157,7 +159,7 @@ namespace MiToolz
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
                     FileName = "cmd.exe",
-                    Arguments = @"/c cd C:\Program Files\NVIDIA Corporation\NVSMI & nvidia-smi -i 0 --query-gpu=power.limit,power.default_limit --format=csv,noheader",
+                    Arguments = FullCmdArgs,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true
                 }
@@ -299,7 +301,7 @@ namespace MiToolz
                                 }
                             }
 
-                            //update UI elements to show clock frequencies
+                            //update UI elements to show corresponding gpu monitoring values
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 //set coresponding UI elements with GPU data values
@@ -364,7 +366,6 @@ namespace MiToolz
                 //after setting the profile terminate MSIAfterburner process
                 KillMSIAB();
 
-                // it only works in WPF
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     //change indicator elements on the UI thread.                   
@@ -383,7 +384,6 @@ namespace MiToolz
             {
                 await Task.Delay(DelayL);
 
-                // it only works in WPF
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // Do something on the UI thread.
@@ -417,8 +417,8 @@ namespace MiToolz
             }
 
             double GetWindowWidth = Application.Current.MainWindow.Width;
-            double StandardWindowWidth = 394;
-            double ExtendedWindowWidth = 608;
+            double StandardWindowWidth = (double)Application.Current.FindResource("StandardWindowWidth");
+            double ExtendedWindowWidth = (double)Application.Current.FindResource("ExtendedWindowWidth");
             string ImageResourcePath = "pack://siteoforigin:,,,/Resources/";
 
             if (GetWindowWidth == StandardWindowWidth)
@@ -442,7 +442,6 @@ namespace MiToolz
             {
                 await Task.Delay(DelayS);
 
-                // it only works in WPF
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // Do something on the UI thread.
@@ -470,7 +469,7 @@ namespace MiToolz
             }
             if (NeedRestart == true)
             {
-                //restart app to apply frequency monitor setting
+                //restart app to apply gpu monitoring setting
                 Process.Start(Application.ResourceAssembly.Location);
                 Application.Current.Shutdown();
             }
@@ -485,7 +484,6 @@ namespace MiToolz
             {
                 await Task.Delay(DelayL);
 
-                // it only works in WPF
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // Do something on the UI thread.
