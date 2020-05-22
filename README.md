@@ -1,2 +1,4 @@
 # MiToolz
-Personal GPU &amp; Audio QuickTool with built-in monitoring
+Personal Nvidia GPU &amp; Creative SoundBlaster Audio QuickTool with built-in realtime monitoring
+
+
