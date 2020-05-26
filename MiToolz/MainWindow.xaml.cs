@@ -434,11 +434,13 @@ namespace MiToolz
             {
                 Button_Expand.Background = new ImageBrush(new BitmapImage(new Uri(ImageResourcePath + "Image_MenuRetract.png")));
                 Application.Current.MainWindow.Width = ExtendedWindowWidth;
+                Button_Expand.ToolTip = "Hide Settings";
             }
             else
             {
                 Button_Expand.Background = new ImageBrush(new BitmapImage(new Uri(ImageResourcePath + "Image_MenuExpand.png")));
                 Application.Current.MainWindow.Width = StandardWindowWidth;
+                Button_Expand.ToolTip = "Show Settings";
             }
         }
 

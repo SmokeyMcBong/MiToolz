@@ -30,7 +30,7 @@
         <TextBlock x:Name="TextBlock_Stock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Stock Profile" VerticalAlignment="Top" Margin="29,32,0,0" Width="94" TextAlignment="Center"/>
         <TextBlock x:Name="TextBlock_OC" HorizontalAlignment="Left" TextWrapping="Wrap" Text="OC Profile" VerticalAlignment="Top" Margin="139,32,0,0" Width="94" TextAlignment="Center"/>
         <TextBlock x:Name="TextBlock_Sound" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="254,32,0,0" Width="94" TextAlignment="Center" Foreground="White"/>
-        <Button x:Name="Button_Expand" HorizontalAlignment="Left" VerticalAlignment="Top" Width="18" Height="19" Margin="357,2,0,0" Click="Button_Expand_Click" Cursor="Hand" Style="{StaticResource MyButton}">
+        <Button x:Name="Button_Expand" HorizontalAlignment="Left" VerticalAlignment="Top" Width="18" Height="19" Margin="357,2,0,0" Click="Button_Expand_Click" Cursor="Hand" ToolTip="Show Settings" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MenuExpand.png">
                 </ImageBrush>
@@ -63,13 +63,13 @@
             <TextBlock ToolTip="{DynamicResource VersionDate}" Text="{DynamicResource VersionNo}" HorizontalAlignment="Left" TextWrapping="Wrap" Width="189" TextAlignment="Center" Margin="-1,0,-1,2" Height="16" VerticalAlignment="Center" Cursor="Help"/>
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Width="1" Margin="477,92,0,0"/>
-        <Button x:Name="Button_SaveProfiles" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="541,28,0,0" Click="Button_SaveProfiles_Click" Cursor="Hand" Style="{StaticResource MyButton}">
+        <Button x:Name="Button_SaveProfiles" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="541,28,0,0" Click="Button_SaveProfiles_Click" Cursor="Hand" ToolTip="Save Settings" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_SaveIni.png"/>
             </Button.Background>
             <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" HorizontalAlignment="Left" Width="22" Height="22"/>
         </Button>
-        <Button x:Name="Button_OpenMSIAB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="386,28,0,0" Click="Button_OpenMSIAB_Click" Cursor="Hand" Style="{StaticResource MyButton}">
+        <Button x:Name="Button_OpenMSIAB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="386,28,0,0" Click="Button_OpenMSIAB_Click" Cursor="Hand" ToolTip="Open MSIAfterburner" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MSIab.png" Opacity="0.52"/>
             </Button.Background>
