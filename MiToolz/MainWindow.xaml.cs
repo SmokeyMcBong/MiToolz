@@ -320,11 +320,20 @@ namespace MiToolz
         }
 
         // Close MSIAfterburner
-        private void KillMSIAB()
+        private void Kill_MSIAB()
         {
             foreach (var MSIAB_Process in Process.GetProcessesByName("MSIAfterburner"))
             {
                 MSIAB_Process.Kill();
+            }
+        }
+
+        // Close SoundBlaster Control Panel
+        private void Kill_SBControl()
+        {
+            foreach (var SBControl_Process in Process.GetProcessesByName("SBAdgyFx"))
+            {
+                SBControl_Process.Kill();
             }
         }
 
@@ -364,7 +373,7 @@ namespace MiToolz
                 await Task.Delay(DelayL);
 
                 //after setting the profile terminate MSIAfterburner process
-                KillMSIAB();
+                Kill_MSIAB();
 
                 Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -401,7 +410,7 @@ namespace MiToolz
             SBControl_Process.Start();
         }
 
-        //show/hide settings portion
+        //show & hide settings portion
         private void Button_Expand_Click(object sender, RoutedEventArgs e)
         {
             ReadSettings();
@@ -521,6 +530,8 @@ namespace MiToolz
             ReadSettings();
             SetComboLists();
             ShowActiveSoundProfile();
+            //also kill SoundBlaster Control Panel when refocused
+            Kill_SBControl();
         }
     }
 }

@@ -4,8 +4,8 @@
              xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="MiToolz.App"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <System:String x:Key="VersionNo" xml:space="preserve">  MiToolz  v2.8.1  </System:String>
-        <System:String x:Key="VersionDate" xml:space="preserve">  Build Date : 21-05-2020  </System:String>
+        <System:String x:Key="VersionNo" xml:space="preserve">  MiToolz  v2.8.2  </System:String>
+        <System:String x:Key="VersionDate" xml:space="preserve">  Build Date : 26-05-2020  </System:String>
         <System:Double x:Key="StandardWindowHeight">290</System:Double>
         <System:Double x:Key="StandardWindowWidth">394</System:Double>
         <System:Double x:Key="ExtendedWindowWidth">608</System:Double>
