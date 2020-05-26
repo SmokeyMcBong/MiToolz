@@ -4,19 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MiToolz" Height="{DynamicResource StandardWindowHeight}" Width="{DynamicResource StandardWindowWidth}" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Activated="Window_Activated" Icon="pack://siteoforigin:,,,/Resources/AppIcon.ico">
+        Title="MiToolz" Height="{DynamicResource StandardWindowHeight}" Width="394" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Activated="Window_Activated" Icon="pack://siteoforigin:,,,/Resources/AppIcon.ico">
     <Grid Background="Gray">
-        <Button x:Name="Button_Stock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="29,29,0,0" Click="Button_SetStock_Click" Cursor="Hand">
+        <Button x:Name="Button_Stock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="29,29,0,0" Click="Button_SetStock_Click" Cursor="Hand" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_GPU.png" Opacity="0.9"/>
             </Button.Background>
         </Button>
-        <Button x:Name="Button_Overclock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="139,29,0,0" Click="Button_SetOC_Click" Cursor="Hand">
+        <Button x:Name="Button_Overclock" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="139,29,0,0" Click="Button_SetOC_Click" Cursor="Hand" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_GPU.png" Opacity="0.9"/>
             </Button.Background>
         </Button>
-        <Button x:Name="Button_Sound" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="254,29,0,0" Click="Button_OpenSB_Click" Cursor="Hand">
+        <Button x:Name="Button_Sound" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Height="95" Margin="254,29,0,0" Click="Button_OpenSB_Click" Cursor="Hand" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_Audio.png"/>
             </Button.Background>
@@ -30,15 +30,16 @@
         <TextBlock x:Name="TextBlock_Stock" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Stock Profile" VerticalAlignment="Top" Margin="29,32,0,0" Width="94" TextAlignment="Center"/>
         <TextBlock x:Name="TextBlock_OC" HorizontalAlignment="Left" TextWrapping="Wrap" Text="OC Profile" VerticalAlignment="Top" Margin="139,32,0,0" Width="94" TextAlignment="Center"/>
         <TextBlock x:Name="TextBlock_Sound" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="254,32,0,0" Width="94" TextAlignment="Center" Foreground="White"/>
-        <Button x:Name="Button_Expand" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="18" Height="19" Margin="357,2,0,0" Click="Button_Expand_Click" Cursor="Hand">
+        <Button x:Name="Button_Expand" HorizontalAlignment="Left" VerticalAlignment="Top" Width="18" Height="19" Margin="357,2,0,0" Click="Button_Expand_Click" Cursor="Hand" Style="{StaticResource MyButton}">
             <Button.Background>
                 <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MenuExpand.png">
                 </ImageBrush>
             </Button.Background>
+            <Border BorderBrush="Black" BorderThickness="1" Height="19" Width="18" CornerRadius="3"/>
         </Button>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="183" VerticalAlignment="Top" Width="189" Margin="380,23,0,0" CornerRadius="6">
             <Grid HorizontalAlignment="Left" Height="141" VerticalAlignment="Top" Width="189" Margin="-1,-1,-1,0">
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Settings" VerticalAlignment="Top" Margin="30,9,0,0" Width="129" TextAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Settings" VerticalAlignment="Top" Margin="30,7,0,0" Width="129" TextAlignment="Center" Foreground="White" FontSize="14" Height="21"/>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Stock Profile" VerticalAlignment="Top" Margin="24,68,0,0" FontSize="11"/>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="OC Profile" VerticalAlignment="Top" Margin="114,68,0,0" FontSize="11"/>
                 <ComboBox x:Name="Combo_Stock" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Width="48" Margin="30,91,0,0" Cursor="Hand">
@@ -62,15 +63,17 @@
             <TextBlock ToolTip="{DynamicResource VersionDate}" Text="{DynamicResource VersionNo}" HorizontalAlignment="Left" TextWrapping="Wrap" Width="189" TextAlignment="Center" Margin="-1,0,-1,2" Height="16" VerticalAlignment="Center" Cursor="Help"/>
         </Border>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Width="1" Margin="477,92,0,0"/>
-        <Button x:Name="Button_SaveProfiles" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="541,28,0,0" Click="Button_SaveProfiles_Click" Cursor="Hand">
+        <Button x:Name="Button_SaveProfiles" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="541,28,0,0" Click="Button_SaveProfiles_Click" Cursor="Hand" Style="{StaticResource MyButton}">
             <Button.Background>
-                <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_SaveIni.png" Opacity="0.75"/>
+                <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_SaveIni.png"/>
             </Button.Background>
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" HorizontalAlignment="Left" Width="22" Height="22"/>
         </Button>
-        <Button x:Name="Button_OpenMSIAB" Content="" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="386,28,0,0" Click="Button_OpenMSIAB_Click" Cursor="Hand">
+        <Button x:Name="Button_OpenMSIAB" HorizontalAlignment="Left" VerticalAlignment="Top" Width="22" Height="22" Margin="386,28,0,0" Click="Button_OpenMSIAB_Click" Cursor="Hand" Style="{StaticResource MyButton}">
             <Button.Background>
-                <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MSIab.png" Opacity="0.45"/>
+                <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/Image_MSIab.png" Opacity="0.52"/>
             </Button.Background>
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="3" HorizontalAlignment="Left" Width="22" Height="22"/>
         </Button>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="95" VerticalAlignment="Top" Width="94" Margin="29,29,0,0" CornerRadius="3"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="77" VerticalAlignment="Top" Width="331" Margin="23,154,0,0" CornerRadius="6"/>
