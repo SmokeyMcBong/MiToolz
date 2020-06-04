@@ -2,7 +2,7 @@
 Personal Nvidia GPU &amp; Creative SoundBlaster Audio QuickTool with built-in realtime monitoring
 
 
-#### This personal project uses the following libraries ..
+#### This personal project uses the following frameworks & libraries ..
 MahApps.Metro > https://github.com/MahApps/MahApps.Metro  
 LibreHardwareMonitorLib > https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 
