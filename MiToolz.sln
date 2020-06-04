@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiToolz", "MiToolz\MiToolz.csproj", "{3F694233-1AD2-47C5-9F9A-44D5A3B37178}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiToolz", "MiToolz\MiToolz.csproj", "{09405820-5162-4AFE-882B-7052CF1381F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3F694233-1AD2-47C5-9F9A-44D5A3B37178}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F694233-1AD2-47C5-9F9A-44D5A3B37178}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F694233-1AD2-47C5-9F9A-44D5A3B37178}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F694233-1AD2-47C5-9F9A-44D5A3B37178}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09405820-5162-4AFE-882B-7052CF1381F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09405820-5162-4AFE-882B-7052CF1381F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09405820-5162-4AFE-882B-7052CF1381F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09405820-5162-4AFE-882B-7052CF1381F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E4D2769B-7641-403B-B274-795E0D63DE62}
+		SolutionGuid = {6DA30A5A-EFFE-4E16-9389-F4D062193CCF}
 	EndGlobalSection
 EndGlobal

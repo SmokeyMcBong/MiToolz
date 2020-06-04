@@ -1,51 +1,58 @@
-﻿using LibreHardwareMonitor.Hardware;
+﻿using ControlzEx.Theming;
+using LibreHardwareMonitor.Hardware;
+using MahApps.Metro.Controls;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MiToolz
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private readonly Computer ThisPC;
-        static string ActiveProfile;
-        private static string StockProfile;
-        private static string OCProfile;
-        private static string SBControl_File;
-        static string SBControl_ActiveProfile;
-        private static string MSIAB_File;
-        private static string IsMonitoringEnabled;
-        private static bool NeedRestart = false;
+        private readonly Computer _thisPc;
         private static readonly ConfigManager ConfigManager = new ConfigManager();
-        private static readonly Brush IndicatorReady = Brushes.Green;
-        private static readonly Brush IndicatorBusy = Brushes.DarkOrange;
-        private static readonly int DelayS = 250;
-        private static readonly int DelayN = 500;
-        private static readonly int DelayL = 1000;
+        private static readonly ListManager ListManager = new ListManager();
+        private static string _activeProfile;
+        private static string _stockProfile;
+        private static string _ocProfile;
+        private static string _sbControlFile;
+        private static string _sbControlActiveProfile;
+        private static string _msiabFile;
+        private static string _isMonitoringEnabled;
+        private static string _appTheme;
+        private static string _appHotKey;
+        private static string _soundSwitchHotKeyModifier;
+        private static string _soundSwitchHotKey;
+        private const int DelayN = 500;
+        private const int DelayL = 1000;
 
         public MainWindow()
         {
+            //ignore Theme ResourceDictionary before initialize as setting whichever theme (_appTheme) saved in .ini
+            Application.Current.Resources.MergedDictionaries.RemoveAt(0);
             InitializeComponent();
 
             //run startup checks, read all config settings and set corresponding UI elements
             StartupSetup();
-            SetComboLists();
-            ShowActiveSoundProfile();
-            ShowActiveMSIabProfile();
-            Indicator.Background = IndicatorReady;
+            SetAppTheme();
+            ShowActiveAudioProfile();
+            ShowActiveGpuProfile();
+            SetupComboListSources();
 
-            //add MainWindow close event handler
-            Closed += new EventHandler(MainWindow_Closed);
+            //add MainWindow event handlers
+            Closed += MainWindow_Closed;
+            Activated += MainWindow_Activated;
 
-            //initialize OhM monitoring for GPU 
-            ThisPC = new Computer()
+            //start OhM Monitoring
+            _thisPc = new Computer
             {
                 IsGpuEnabled = true
             };
@@ -54,29 +61,37 @@ namespace MiToolz
         }
 
         //app startup checks
-        private void StartupSetup()
+        private static void StartupSetup()
         {
             //check for duplicate instances
-            if (Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location)).Count() > 1)
+            if (Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly()?.Location)).Length > 1)
             {
                 Process.GetCurrentProcess().Kill();
             }
 
             //check for ini file, if not found then create new file and write default values to it
-            string MyConfigManager = Properties.Resources.MyConfigManager;
-            string SBControl_FilePath = Properties.Resources.SBControl_FilePath;
-            string MSIAB_FilePath = Properties.Resources.MSIAB_FilePath;
-            string DefaultStockProfile = Properties.Resources.DefaultStockProfile;
-            string DefaultOCProfile = Properties.Resources.DefaultOCProfile;
-            IsMonitoringEnabled = "1";
+            var myConfigManager = Properties.Resources.MyConfigManager;
+            var sbControlFilePath = Properties.Resources.SBControl_FilePath;
+            var msiabFilePath = Properties.Resources.MSIAB_FilePath;
+            var defaultStockProfile = Properties.Resources.DefaultStockProfile;
+            var defaultOcProfile = Properties.Resources.DefaultOCProfile;
+            var defaultMonitoringEnabled = Properties.Resources.DefaultMonitoringEnabled;
+            var defaultAppTheme = Properties.Resources.DefaultAppTheme;
+            var defaultAppHotKey = Properties.Resources.DefaultAppHotKey;
+            var defaultSoundSwitchHotKeyModifier = Properties.Resources.DefaultSoundSwitchHotKeyModifier;
+            var defaultSoundSwitchHotKey = Properties.Resources.DefaultSoundSwitchHotKey;
 
-            if (!File.Exists(MyConfigManager))
+            if (!File.Exists(myConfigManager))
             {
-                ConfigManager.IniWrite("StockProfile", DefaultStockProfile);
-                ConfigManager.IniWrite("OCProfile", DefaultOCProfile);
-                ConfigManager.IniWrite("SBControl_File", SBControl_FilePath);
-                ConfigManager.IniWrite("MSIAB_File", MSIAB_FilePath);
-                ConfigManager.IniWrite("IsMonitoringEnabled", IsMonitoringEnabled);
+                ConfigManager.IniWrite("StockProfile", defaultStockProfile);
+                ConfigManager.IniWrite("OCProfile", defaultOcProfile);
+                ConfigManager.IniWrite("SBControl_File", sbControlFilePath);
+                ConfigManager.IniWrite("MSIAB_File", msiabFilePath);
+                ConfigManager.IniWrite("IsMonitoringEnabled", defaultMonitoringEnabled);
+                ConfigManager.IniWrite("AppTheme", defaultAppTheme);
+                ConfigManager.IniWrite("AppHotKey", defaultAppHotKey);
+                ConfigManager.IniWrite("SoundSwitchHotKeyModifier", defaultSoundSwitchHotKeyModifier);
+                ConfigManager.IniWrite("SoundSwitchHotKey", defaultSoundSwitchHotKey);
                 ReadSettings();
             }
             else
@@ -86,72 +101,87 @@ namespace MiToolz
         }
 
         //read in values from ini file
-        private void ReadSettings()
+        private static void ReadSettings()
         {
-            StockProfile = ConfigManager.IniRead("StockProfile");
-            OCProfile = ConfigManager.IniRead("OCProfile");
-            SBControl_File = ConfigManager.IniRead("SBControl_File");
-            MSIAB_File = ConfigManager.IniRead("MSIAB_File");
-            IsMonitoringEnabled = ConfigManager.IniRead("IsMonitoringEnabled");
+            _stockProfile = ConfigManager.IniRead("StockProfile");
+            _ocProfile = ConfigManager.IniRead("OCProfile");
+            _sbControlFile = ConfigManager.IniRead("SBControl_File");
+            _msiabFile = ConfigManager.IniRead("MSIAB_File");
+            _isMonitoringEnabled = ConfigManager.IniRead("IsMonitoringEnabled");
+            _appTheme = ConfigManager.IniRead("AppTheme");
+            _appHotKey = ConfigManager.IniRead("AppHotKey");
+            _soundSwitchHotKeyModifier = ConfigManager.IniRead("SoundSwitchHotKeyModifier");
+            _soundSwitchHotKey = ConfigManager.IniRead("SoundSwitchHotKey");
 
-            string SBControl_ProfileFilePath = Properties.Resources.SBControl_ProfileFilePath;
-            string SBControl_ProfileRegPath = Properties.Resources.SBControl_ProfileRegPath;
+            var sbControlProfileFilePath = Properties.Resources.SBControl_ProfileFilePath;
+            var sbControlProfileRegPath = Properties.Resources.SBControl_ProfileRegPath;
 
             //full path to profile folder
-            string UserProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string SBPAth = UserProfile + @"\" + SBControl_ProfileFilePath;
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            var sbPath = userProfile + @"\" + sbControlProfileFilePath;
 
             //get folder name of subfolder/deviceID (HDAUDIO_VEN_10EC_DEV_0899_SUBSYS_11020041 etc)
-            string[] SBGetIDDir = Directory.GetDirectories(SBPAth, "HDAUDIO*", SearchOption.TopDirectoryOnly);
-            string SBDeviceIDPath = string.Join("", SBGetIDDir);
-            string SBDeviceID = SBDeviceIDPath.Substring(SBDeviceIDPath.LastIndexOf(@"\") + 1);
+            var sbGetIdDir = Directory.GetDirectories(sbPath, "HDAUDIO*", SearchOption.TopDirectoryOnly);
+            var sbDeviceIdPath = string.Join("", sbGetIdDir);
+            var sbDeviceId = sbDeviceIdPath.Substring(sbDeviceIdPath.LastIndexOf(@"\", StringComparison.Ordinal) + 1);
 
             //get registry key value for active profile using deviceID
-            string SBRegKeyName = SBControl_ProfileRegPath + SBDeviceID;
-            string SBGetValue = ConfigManager.RegReadKeyValue(SBRegKeyName, "Profile");
-            string SBRegKeyValue = SBGetValue.Substring(SBGetValue.LastIndexOf(@"\") + 1);
+            var sbRegKeyName = sbControlProfileRegPath + sbDeviceId;
+            var sbGetValue = ConfigManager.RegReadKeyValue(sbRegKeyName, "Profile");
+            var sbRegKeyValue = sbGetValue.Substring(sbGetValue.LastIndexOf(@"\", StringComparison.Ordinal) + 1);
 
             //read profile xml and extract profile_name value
-            string FullXmlFilePath = SBDeviceIDPath + @"\" + SBRegKeyValue;
-            SBControl_ActiveProfile = ConfigManager.XmlRead(FullXmlFilePath);
+            var fullXmlFilePath = sbDeviceIdPath + @"\" + sbRegKeyValue;
+            _sbControlActiveProfile = ConfigManager.XmlRead(fullXmlFilePath);
+        }
+
+        private void SetAppTheme()
+        {
+            if (_appTheme != null)
+            {
+                ThemeManager.Current.ChangeTheme(this, _appTheme);
+            }
         }
 
         //set if gpu monitoring is enabled and show if true
         private void IsMonitorEnabled()
         {
-            if (IsMonitoringEnabled == "0")
+            switch (_isMonitoringEnabled)
             {
-                Checkbox_EnableMonitor.IsChecked = false;
+                case "0":
+                    HideMonitoring();
+                    CheckboxEnableMonitor.IsOn = false;
+                    _thisPc.Close();
+                    break;
+                case "1":
+                    ShowMonitoring();
+                    CheckboxEnableMonitor.IsOn = true;
+                    StartOhMMonitor();
+                    break;
             }
-            if (IsMonitoringEnabled == "1")
-            {
-                Checkbox_EnableMonitor.IsChecked = true;
-                StartOhMMonitor();
-            }
-        }
-
-        // Populate both ComboBox's
-        private void SetComboLists()
-        {
-            Combo_Stock.SelectedIndex = int.Parse(StockProfile) - 1;
-            Combo_OC.SelectedIndex = int.Parse(OCProfile) - 1;
         }
 
         //show which Audio profile is active
-        private void ShowActiveSoundProfile()
+        private void ShowActiveAudioProfile()
         {
-            TextBlock_Sound.Text = SBControl_ActiveProfile;
+            var sbAp = " " + _sbControlActiveProfile + " ";
+            var sbBadge = AudioProfileBadge.Badge.ToString();
+
+            if (sbBadge != sbAp)
+            {
+                AudioProfileBadge.Badge = " " + _sbControlActiveProfile + " ";
+            }
         }
 
-        //determin which profile is active by checking if power.limit is greater than defaul_power.limit
-        private void ShowActiveMSIabProfile()
+        //determine which profile is active by checking if power.limit is greater than default_power.limit
+        private void ShowActiveGpuProfile()
         {
-            string ProgramFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            string NVsmiPath = ProgramFiles + @"\NVIDIA Corporation\NVSMI";
-            string NVsmiQuery = "nvidia-smi -i 0 --query-gpu=power.limit,power.default_limit --format=csv,noheader";
-            string FullCmdArgs = @"/c cd " + NVsmiPath + " & " + NVsmiQuery;
+            var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            var nvSmiPath = programFiles + @"\NVIDIA Corporation\NVSMI";
+            const string nvSmiQuery = "nvidia-smi -i 0 --query-gpu=power.limit,power.default_limit --format=csv,noheader";
+            var fullCmdArgs = @"/c cd " + nvSmiPath + " & " + nvSmiQuery;
 
-            Process ShowProfile_Process = new Process
+            var showProfileProcess = new Process
             {
                 StartInfo = new ProcessStartInfo()
                 {
@@ -159,381 +189,548 @@ namespace MiToolz
                     CreateNoWindow = true,
                     WindowStyle = ProcessWindowStyle.Hidden,
                     FileName = "cmd.exe",
-                    Arguments = FullCmdArgs,
+                    Arguments = fullCmdArgs,
                     RedirectStandardError = true,
                     RedirectStandardOutput = true
                 }
             };
-            ShowProfile_Process.Start();
+            showProfileProcess.Start();
 
-            ActiveProfile = ShowProfile_Process.StandardOutput.ReadToEnd();
+            _activeProfile = showProfileProcess.StandardOutput.ReadToEnd();
 
-            string[] SplitData = ActiveProfile.Split(',');
-            string ActivePowerLimit = Regex.Replace(SplitData[0], "[^0-9]", "");
-            string DefaultPowerLimit = Regex.Replace(SplitData[1], "[^0-9]", "");
-            int ActivePLvalue = int.Parse(ActivePowerLimit);
-            int DefaultPLvalue = int.Parse(DefaultPowerLimit);
+            var splitData = _activeProfile.Split(',');
+            var activePowerLimit = Regex.Replace(splitData[0], "[^0-9]", "");
+            var defaultPowerLimit = Regex.Replace(splitData[1], "[^0-9]", "");
+            var activePLvalue = int.Parse(activePowerLimit);
+            var defaultPLvalue = int.Parse(defaultPowerLimit);
 
-            if (ActivePLvalue > DefaultPLvalue)
+            if (activePLvalue > defaultPLvalue)
             {
-                TextBlock_OC.Foreground = Brushes.White;
-                TextBlock_Stock.Foreground = Brushes.Black;
+                OcProfileBadge.Badge = " Enabled ";
+                StockProfileBadge.Badge = "";
             }
             else
             {
-                TextBlock_OC.Foreground = Brushes.Black;
-                TextBlock_Stock.Foreground = Brushes.White;
+                StockProfileBadge.Badge = " Enabled ";
+                OcProfileBadge.Badge = "";
             }
 
-            ShowProfile_Process.WaitForExit();
+            showProfileProcess.WaitForExit();
         }
 
-        //start OhM GPU monitoring
+        private void SetupComboListSources()
+        {
+            //define List sources
+            AppHotKey.ItemsSource = ListManager.HotKey;
+            DefaultProfileList.ItemsSource = ListManager.HotKeyMsiAb;
+            OverclockProfileList.ItemsSource = ListManager.HotKeyMsiAb;
+            SoundSwitchHotKeyModifier.ItemsSource = ListManager.HotKeyModifier;
+            SoundSwitchHotKey.ItemsSource = ListManager.HotKey;
+            //show relative list indexes
+            SetComboListIndexes();
+        }
+
+        private void SetComboListIndexes()
+        {
+            var hotKeyApp = ListManager.HotKey.FindIndex(a => a.Contains(_appHotKey));
+            AppHotKey.SelectedIndex = hotKeyApp;
+            var hotKeyMsiAbiIndex = ListManager.HotKeyMsiAb.FindIndex(a => a.Contains(_stockProfile));
+            DefaultProfileList.SelectedIndex = hotKeyMsiAbiIndex;
+            var hotKeyMsiAbIndex = ListManager.HotKeyMsiAb.FindIndex(a => a.Contains(_ocProfile));
+            OverclockProfileList.SelectedIndex = hotKeyMsiAbIndex;
+            var hotKeyModifierSoundSwitch = ListManager.HotKeyModifier.FindIndex(a => a.Contains(_soundSwitchHotKeyModifier));
+            SoundSwitchHotKeyModifier.SelectedIndex = hotKeyModifierSoundSwitch;
+            var hotKeySoundSwitch = ListManager.HotKey.FindIndex(a => a.Contains(_soundSwitchHotKey));
+            SoundSwitchHotKey.SelectedIndex = hotKeySoundSwitch;
+        }
+
         private void StartOhMMonitor()
         {
-            string CurCoreClock = "";
-            string CurMemClock = "";
-            string CurGpuTemp = "";
-            string CurGpuLoad = "";
-            string CurMemLoad = "";
-            string CurGpuPower = "";
-            int RoundValue;
+            var curCoreClock = "";
+            var curMemClock = "";
+            var curGpuLoad = "";
+            var curMemLoad = "";
+            var curGpuTemp = "";
+            var curGpuPower = "";
+            int roundValue;
 
             Task.Factory.StartNew(async () =>
             {
-                ThisPC.Open();
+                _thisPc.Open();
 
                 while (true)
                 {
-                    foreach (IHardware hardware in ThisPC.Hardware)
+                    foreach (var hardware in _thisPc.Hardware)
                     {
                         hardware.Update();
 
-                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                        if (hardware.HardwareType != HardwareType.GpuNvidia) continue;
+                        foreach (var sensor in hardware.Sensors)
                         {
-                            foreach (var sensor in hardware.Sensors)
+                            switch (sensor.SensorType)
                             {
-                                if (sensor.SensorType == SensorType.Clock)
-                                {
-                                    if (sensor.Name.Contains("Core"))
+                                case SensorType.Clock:
                                     {
-                                        if (sensor.Value.Value >= 0)
+                                        if (sensor.Name.Contains("Core"))
                                         {
-                                            RoundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                            CurCoreClock = RoundValue.ToString() + " Mhz";
+                                            if (sensor.Value.Value >= 0)
+                                            {
+                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                curCoreClock = roundValue + " Mhz";
+                                            }
+                                            else
+                                            {
+                                                curCoreClock = " -no data- ";
+                                            }
                                         }
-                                        else
-                                        {
-                                            CurCoreClock = " -no data- ";
-                                        }
-                                    }
 
-                                    if (sensor.Name.Contains("Memory"))
-                                    {
-                                        if (sensor.Value.Value >= 0)
+                                        if (sensor.Name.Contains("Memory"))
                                         {
-                                            RoundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                            CurMemClock = RoundValue.ToString() + " Mhz";
+                                            if (sensor.Value.Value >= 0)
+                                            {
+                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                curMemClock = roundValue + " Mhz";
+                                            }
+                                            else
+                                            {
+                                                curMemClock = " -no data- ";
+                                            }
                                         }
-                                        else
-                                        {
-                                            CurMemClock = " -no data- ";
-                                        }
-                                    }
-                                }
 
-                                if (sensor.SensorType == SensorType.Temperature)
-                                {
-                                    if (sensor.Name.Contains("Core"))
-                                    {
-                                        if (sensor.Value.Value >= 0)
-                                        {
-                                            CurGpuTemp = sensor.Value.GetValueOrDefault().ToString() + " °C";
-                                        }
-                                        else
-                                        {
-                                            CurGpuTemp = " -no data- ";
-                                        }
+                                        break;
                                     }
-                                }
+                                case SensorType.Temperature:
+                                    {
+                                        if (sensor.Name.Contains("Core"))
+                                        {
+                                            if (sensor.Value.Value >= 0)
+                                            {
+                                                curGpuTemp = sensor.Value.GetValueOrDefault().ToString(CultureInfo.CurrentCulture) + " °C";
+                                            }
+                                            else
+                                            {
+                                                curGpuTemp = " -no data- ";
+                                            }
+                                        }
 
-                                if (sensor.SensorType == SensorType.Load)
-                                {
-                                    if (sensor.Name.Contains("Core"))
-                                    {
-                                        if (sensor.Value.Value >= 0)
-                                        {
-                                            CurGpuLoad = sensor.Value.GetValueOrDefault().ToString() + " %";
-                                        }
-                                        else
-                                        {
-                                            CurGpuLoad = " -no data- ";
-                                        }
+                                        break;
                                     }
+                                case SensorType.Load:
+                                    {
+                                        if (sensor.Name.Contains("Core"))
+                                        {
+                                            if (sensor.Value.Value >= 0)
+                                            {
+                                                curGpuLoad = sensor.Value.GetValueOrDefault().ToString(CultureInfo.CurrentCulture) + " %";
+                                            }
+                                            else
+                                            {
+                                                curGpuLoad = " -no data- ";
+                                            }
+                                        }
 
-                                    if (sensor.Name.Contains("Memory Controller"))
-                                    {
-                                        if (sensor.Value.Value >= 0)
+                                        if (sensor.Name.Contains("Memory Controller"))
                                         {
-                                            CurMemLoad = sensor.Value.GetValueOrDefault().ToString() + " %";
+                                            if (sensor.Value.Value >= 0)
+                                            {
+                                                curMemLoad = sensor.Value.GetValueOrDefault().ToString(CultureInfo.CurrentCulture) + " %";
+                                            }
+                                            else
+                                            {
+                                                curMemLoad = " -no data- ";
+                                            }
                                         }
-                                        else
-                                        {
-                                            CurMemLoad = " -no data- ";
-                                        }
-                                    }
-                                }
 
-                                if (sensor.SensorType == SensorType.Power)
-                                {
-                                    if (sensor.Name.Contains("GPU Package"))
-                                    {
-                                        if (sensor.Value.Value >= 0)
-                                        {
-                                            RoundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                            CurGpuPower = RoundValue.ToString() + " W";
-                                        }
-                                        else
-                                        {
-                                            CurGpuPower = " -no data- ";
-                                        }
+                                        break;
                                     }
-                                }
+                                case SensorType.Power:
+                                    {
+                                        if (sensor.Name.Contains("GPU Package"))
+                                        {
+                                            if (sensor.Value.Value >= 0)
+                                            {
+                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                curGpuPower = roundValue + " W";
+                                            }
+                                            else
+                                            {
+                                                curGpuPower = " -no data- ";
+                                            }
+                                        }
+
+                                        break;
+                                    }
+                                case SensorType.Voltage:
+                                    break;
+                                case SensorType.Frequency:
+                                    break;
+                                case SensorType.Fan:
+                                    break;
+                                case SensorType.Flow:
+                                    break;
+                                case SensorType.Control:
+                                    break;
+                                case SensorType.Level:
+                                    break;
+                                case SensorType.Factor:
+                                    break;
+                                case SensorType.Data:
+                                    break;
+                                case SensorType.SmallData:
+                                    break;
+                                case SensorType.Throughput:
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
                             }
-
-                            //update UI elements to show corresponding gpu monitoring values
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                //set coresponding UI elements with GPU data values
-                                ShowCoreMhz.Text = CurCoreClock;
-                                ShowMemMhz.Text = CurMemClock;
-                                ShowGpuTemp.Text = CurGpuTemp;
-                                ShowGpuLoad.Text = CurGpuLoad;
-                                ShowMemLoad.Text = CurMemLoad;
-                                ShowGpuPower.Text = CurGpuPower;
-                            });
                         }
+
+                        var clock = curCoreClock;
+                        var memClock = curMemClock;
+                        var load = curGpuLoad;
+                        var memLoad = curMemLoad;
+                        var temp = curGpuTemp;
+                        var power = curGpuPower;
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            //set corresponding Tile Elements with GPU data values
+                            CoreSpeed.Text = clock;
+                            MemSpeed.Text = memClock;
+                            CoreLoad.Text = load;
+                            MemLoad.Text = memLoad;
+                            CoreTemp.Text = temp;
+                            TotalPower.Text = power;
+                        });
                     }
                     await Task.Delay(DelayN);
                 }
             });
         }
 
-        // Close MSIAfterburner
-        private void Kill_MSIAB()
+        // Terminate a running app by process name
+        private static void TerminateApp(string processName)
         {
-            foreach (var MSIAB_Process in Process.GetProcessesByName("MSIAfterburner"))
+            foreach (var process in Process.GetProcessesByName(processName))
             {
-                MSIAB_Process.Kill();
-            }
-        }
-
-        // Close SoundBlaster Control Panel
-        private void Kill_SBControl()
-        {
-            foreach (var SBControl_Process in Process.GetProcessesByName("SBAdgyFx"))
-            {
-                SBControl_Process.Kill();
+                process.Kill();
             }
         }
 
         // Set Stock GPU profile
-        private void Button_SetStock_Click(object sender, RoutedEventArgs e)
+        private void GpuStockTile_OnClick(object sender, RoutedEventArgs e)
         {
             ApplyProfile("SetStock");
         }
 
         // Set Overclock GPU profile
-        private void Button_SetOC_Click(object sender, RoutedEventArgs e)
+        private void GpuOcTile_OnClick(object sender, RoutedEventArgs e)
         {
             ApplyProfile("SetOC");
         }
 
         //Apply selected profile
-        private void ApplyProfile(string Profile)
+        private void ApplyProfile(string profile)
         {
-            string Args = null;
-            Indicator.Background = IndicatorBusy;
+            string args = null;
 
-            if (Profile == "SetStock")
+            switch (profile)
             {
-                Args = "/Profile" + StockProfile;
-            }
-
-            if (Profile == "SetOC")
-            {
-                Args = "/Profile" + OCProfile;
+                case "SetStock":
+                    args = "/Profile" + _stockProfile;
+                    break;
+                case "SetOC":
+                    args = "/Profile" + _ocProfile;
+                    break;
             }
 
             //start MSIAfterburner using appropriate /profile switch
-            Process.Start(MSIAB_File, Args);
+            Process.Start(_msiabFile, args);
 
             Task.Factory.StartNew(async () =>
             {
                 await Task.Delay(DelayL);
 
                 //after setting the profile terminate MSIAfterburner process
-                Kill_MSIAB();
+                TerminateApp("MSIAfterburner");
 
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    //change indicator elements on the UI thread.                   
-                    Indicator.Background = IndicatorReady;
-                    ShowActiveMSIabProfile();
-                });
+                Dispatcher.Invoke(ShowActiveGpuProfile);
             });
         }
 
         // Open SoundBlaster Control Panel
-        private void Button_OpenSB_Click(object sender, RoutedEventArgs e)
+        private void AudioTile_OnClick(object sender, RoutedEventArgs e)
         {
-            Indicator.Background = IndicatorBusy;
-
-            Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(DelayL);
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    // Do something on the UI thread.
-                    Indicator.Background = IndicatorReady;
-                });
-            });
-
-            var SBControl_Process = new Process
+            var sbControlProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = SBControl_File
+                    FileName = _sbControlFile
                 }
             };
-            SBControl_Process.Start();
-        }
-
-        //show & hide settings portion
-        private void Button_Expand_Click(object sender, RoutedEventArgs e)
-        {
-            ReadSettings();
-            SetComboLists();
-
-            if (IsMonitoringEnabled == "0")
-            {
-                Checkbox_EnableMonitor.IsChecked = false;
-            }
-            if (IsMonitoringEnabled == "1")
-            {
-                Checkbox_EnableMonitor.IsChecked = true;
-            }
-
-            double GetWindowWidth = Application.Current.MainWindow.Width;
-            double StandardWindowWidth = (double)Application.Current.FindResource("StandardWindowWidth");
-            double ExtendedWindowWidth = (double)Application.Current.FindResource("ExtendedWindowWidth");
-            string ImageResourcePath = "pack://siteoforigin:,,,/Resources/";
-
-            if (GetWindowWidth == StandardWindowWidth)
-            {
-                Button_Expand.Background = new ImageBrush(new BitmapImage(new Uri(ImageResourcePath + "Image_MenuRetract.png")));
-                Application.Current.MainWindow.Width = ExtendedWindowWidth;
-                Button_Expand.ToolTip = "Hide Settings";
-            }
-            else
-            {
-                Button_Expand.Background = new ImageBrush(new BitmapImage(new Uri(ImageResourcePath + "Image_MenuExpand.png")));
-                Application.Current.MainWindow.Width = StandardWindowWidth;
-                Button_Expand.ToolTip = "Show Settings";
-            }
-        }
-
-        //save profile values to ini file
-        private void Button_SaveProfiles_Click(object sender, RoutedEventArgs e)
-        {
-            Indicator.Background = IndicatorBusy;
-
-            Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(DelayS);
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    // Do something on the UI thread.
-                    Indicator.Background = IndicatorReady;
-                });
-            });
-
-            var GetComboStockValue = Combo_Stock.SelectedIndex + 1;
-            var GetComboOCValue = Combo_OC.SelectedIndex + 1;
-            ConfigManager.IniWrite("StockProfile", GetComboStockValue.ToString());
-            ConfigManager.IniWrite("OCProfile", GetComboOCValue.ToString());
-
-            if (Checkbox_EnableMonitor.IsChecked == false)
-            {
-                ConfigManager.IniWrite("IsMonitoringEnabled", "0");
-            }
-            if (Checkbox_EnableMonitor.IsChecked == true)
-            {
-                ConfigManager.IniWrite("IsMonitoringEnabled", "1");
-            }
-
-            if (NeedRestart == false)
-            {
-                ReadSettings();
-            }
-            if (NeedRestart == true)
-            {
-                //restart app to apply gpu monitoring setting
-                Process.Start(Application.ResourceAssembly.Location);
-                Application.Current.Shutdown();
-            }
+            sbControlProcess.Start();
         }
 
         //open MSIAfterburner application
-        private void Button_OpenMSIAB_Click(object sender, RoutedEventArgs e)
+        private void MsIabTile_OnClick(object sender, RoutedEventArgs e)
         {
-            Indicator.Background = IndicatorBusy;
-
-            Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(DelayL);
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    // Do something on the UI thread.
-                    Indicator.Background = IndicatorReady;
-                });
-            });
-
-            var MSIAB_Process = new Process
+            var msiabProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = MSIAB_File
+                    FileName = _msiabFile
                 }
             };
-            MSIAB_Process.Start();
+            msiabProcess.Start();
         }
 
-        //set restart app flag when checkbox has been clicked/changed
-        private void Checkbox_EnableMonitor_Clicked(object sender, RoutedEventArgs e)
+        // use SendKeys to switch current audio output device using SoundSwitch
+        private void SoundSwitchTile_OnClick(object sender, RoutedEventArgs e)
         {
-            NeedRestart = true;
+            var keyPressModifier = _soundSwitchHotKeyModifier;
+            var keyPress = _soundSwitchHotKey;
+            KeyManager.HotKeySender(keyPressModifier, keyPress);
         }
 
-        //MainWindow close application event handler
-        void MainWindow_Closed(object sender, EventArgs e)
+        private void ToggleSwitch_EnableMonitor(object sender, RoutedEventArgs e)
         {
-            //close OhM monitoring when exiting
-            ThisPC.Close();
-            Close();
+            if (!(sender is ToggleSwitch toggleSwitch)) return;
+            switch (toggleSwitch.IsOn)
+            {
+                case true:
+                    ConfigManager.IniWrite("IsMonitoringEnabled", "1");
+                    ShowMonitoring();
+                    StartOhMMonitor();
+                    break;
+                default:
+                    ConfigManager.IniWrite("IsMonitoringEnabled", "0");
+                    _thisPc.Close();
+                    HideMonitoring();
+                    break;
+            }
+        }
+
+        private static void ShowMonitoring()
+        {
+            MonitoringDecision(ListManager.ControlsTiles, ListManager.ControlsTextBlocks, "Enable");
+        }
+
+        private static void HideMonitoring()
+        {
+            MonitoringDecision(ListManager.ControlsTiles, ListManager.ControlsTextBlocks, "Disable");
+        }
+
+        private static void MonitoringDecision(IEnumerable<Tile> controlsTiles, IEnumerable<TextBlock> controlsTextBlocks, string decision)
+        {
+            if (controlsTiles == null) throw new ArgumentNullException(nameof(controlsTiles));
+            if (controlsTextBlocks == null) throw new ArgumentNullException(nameof(controlsTextBlocks));
+
+            foreach (var monitorTiles in controlsTiles)
+            {
+                switch (decision)
+                {
+                    case "Enable":
+                        monitorTiles.IsEnabled = true;
+                        break;
+                    case "Disable":
+                        monitorTiles.IsEnabled = false;
+                        break;
+                }
+            }
+
+            foreach (var monitorTextBlocks in controlsTextBlocks)
+            {
+                switch (decision)
+                {
+                    case "Enable":
+                        monitorTextBlocks.Visibility = Visibility.Visible;
+                        break;
+                    case "Disable":
+                        monitorTextBlocks.Text = null;
+                        monitorTextBlocks.Visibility = Visibility.Hidden;
+                        break;
+                }
+            }
+        }
+
+        private void Settings(object sender, RoutedEventArgs e)
+        {
+            switch (SettingsDialog.Visibility)
+            {
+                case Visibility.Visible:
+                    ReadSettings();
+                    CheckboxEnableMonitor.IsEnabled = true;
+                    foreach (var mainTiles in ListManager.ControlsMainTiles)
+                    {
+                        mainTiles.IsEnabled = true;
+
+                    }
+                    SettingsDialog.Visibility = Visibility.Collapsed;
+                    SettingsButton.Content = "Settings ";
+                    break;
+                case Visibility.Collapsed:
+                    ReadSettings();
+                    SetComboListIndexes();
+                    SettingsButton.Content = "< " + SettingsButton.Content;
+                    CheckboxEnableMonitor.IsEnabled = false;
+                    foreach (var mainTiles in ListManager.ControlsMainTiles)
+                    {
+                        mainTiles.IsEnabled = false;
+
+                    }
+                    SettingsDialog.Visibility = Visibility.Visible;
+                    break;
+                case Visibility.Hidden:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            // check current theme and set RadioButton accordingly when SettingsDialog is opened
+            var currentTheme = ThemeManager.Current.DetectTheme(this);
+            if (currentTheme != null && currentTheme.Name == "Dark.Red")
+            {
+                RadioRedTheme.IsChecked = true;
+            }
+            if (currentTheme != null && currentTheme.Name == "Dark.Amber")
+            {
+                RadioAmberTheme.IsChecked = true;
+            }
+            if (currentTheme != null && currentTheme.Name == "Dark.Blue")
+            {
+                RadioBlueTheme.IsChecked = true;
+            }
+            if (currentTheme != null && currentTheme.Name == "Dark.Purple")
+            {
+                RadioPurpleTheme.IsChecked = true;
+            }
+            if (currentTheme != null && currentTheme.Name == "Dark.Green")
+            {
+                RadioGreenTheme.IsChecked = true;
+            }
+            if (currentTheme != null && currentTheme.Name == "Dark.Teal")
+            {
+                RadioTealTheme.IsChecked = true;
+            }
+            if (currentTheme != null && currentTheme.Name == "Dark.Steel")
+            {
+                RadioSteelTheme.IsChecked = true;
+            }
+        }
+
+        private void RadioRedTheme_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _appTheme = "Dark.Red";
+            SetThemeSave(_appTheme);
+        }
+
+        private void RadioAmberTheme_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _appTheme = "Dark.Amber";
+            SetThemeSave(_appTheme);
+        }
+
+        private void RadioBlueTheme_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _appTheme = "Dark.Blue";
+            SetThemeSave(_appTheme);
+        }
+
+        private void RadioPurpleTheme_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _appTheme = "Dark.Purple";
+            SetThemeSave(_appTheme);
+        }
+
+        private void RadioGreenTheme_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _appTheme = "Dark.Green";
+            SetThemeSave(_appTheme);
+        }
+
+        private void RadioTealTheme_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _appTheme = "Dark.Teal";
+            SetThemeSave(_appTheme);
+        }
+
+        private void RadioSteelTheme_OnChecked(object sender, RoutedEventArgs e)
+        {
+            _appTheme = "Dark.Steel";
+            SetThemeSave(_appTheme);
+        }
+
+        // set chosen theme and save to .ini file
+        private void SetThemeSave(string themeName)
+        {
+            _appTheme = themeName;
+            ThemeManager.Current.ChangeTheme(this, _appTheme);
+            ConfigManager.IniWrite("AppTheme", _appTheme);
+        }
+
+        private void DefaultProfileList_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var defaultProfileListValue = DefaultProfileList.SelectedValue.ToString();
+            ConfigManager.IniWrite("StockProfile", defaultProfileListValue);
+        }
+
+        private void OverclockProfileList_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var overclockProfileListValue = OverclockProfileList.SelectedValue.ToString();
+            ConfigManager.IniWrite("OCProfile", overclockProfileListValue);
+        }
+
+        private void SoundSwitchHotKeyModifier_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var soundSwitchHotKeyModifierValue = SoundSwitchHotKeyModifier.SelectedValue.ToString();
+            ConfigManager.IniWrite("SoundSwitchHotKeyModifier", soundSwitchHotKeyModifierValue);
+        }
+
+        private void SoundSwitchHotKey_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var soundSwitchHotKeyValue = SoundSwitchHotKey.SelectedValue.ToString();
+            ConfigManager.IniWrite("SoundSwitchHotKey", soundSwitchHotKeyValue);
+        }
+
+        private void AppHotKey_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var appHotKeyValue = AppHotKey.SelectedValue.ToString();
+            ConfigManager.IniWrite("AppHotKey", appHotKeyValue);
+        }
+
+        private void AiOHotKey(object sender, KeyEventArgs e)
+        {
+            var keyPress = e.Key.ToString();
+            if (keyPress.Contains(_soundSwitchHotKeyModifier) || keyPress.Contains(_soundSwitchHotKey)) return;
+
+            if (!keyPress.Contains(_appHotKey)) return;
+            if (OcProfileBadge.Badge.ToString() == " Enabled ")
+            {
+                ApplyProfile("SetStock");
+            }
+            if (StockProfileBadge.Badge.ToString() == " Enabled ")
+            {
+                ApplyProfile("SetOC");
+            }
+            AudioTile_OnClick(sender, e);
         }
 
         //reflect updated settings in UI when window is re-focused
-        private void Window_Activated(object sender, EventArgs e)
+        private void MainWindow_Activated(object sender, EventArgs e)
         {
             ReadSettings();
-            SetComboLists();
-            ShowActiveSoundProfile();
-            //also kill SoundBlaster Control Panel when refocused
-            Kill_SBControl();
+            ShowActiveAudioProfile();
+            ShowActiveGpuProfile();
+            SetComboListIndexes();
+            // kill SoundBlaster Control Panel if running when app is refocused
+            TerminateApp("SBAdgyFx");
+        }
+
+        private void MainWindow_Closed(object sender, EventArgs e)
+        {
+            //close OhM monitoring when exiting
+            _thisPc.Close();
+            Close();
         }
     }
 }

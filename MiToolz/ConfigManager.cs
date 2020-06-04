@@ -8,82 +8,64 @@ using System.Xml.Linq;
 
 namespace MiToolz
 {
-    class ConfigManager
+    internal class ConfigManager
     {
-        readonly string Path;
-        readonly string EXE = Assembly.GetExecutingAssembly().GetName().Name;
+        private readonly string _path;
+        private readonly string _exe = Assembly.GetExecutingAssembly().GetName().Name;
 
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern long WritePrivateProfileString(string Section, string Key, string Value, string FilePath);
+        private static extern long WritePrivateProfileString(string section, string key, string value, string filePath);
 
         [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern int GetPrivateProfileString(string Section, string Key, string Default, StringBuilder RetVal, int Size, string FilePath);
+        private static extern int GetPrivateProfileString(string section, string key, string @default, StringBuilder retVal, int size, string filePath);
 
-        //ini file management >
-        public ConfigManager(string IniPath = null)
+        //ini file management ... >
+        public ConfigManager(string iniPath = null)
         {
-            Path = new FileInfo(IniPath ?? EXE + ".ini").FullName;
+            _path = new FileInfo(iniPath ?? _exe + ".ini").FullName;
         }
 
-        public string IniRead(string Key, string Section = null)
+        public string IniRead(string key, string section = null)
         {
-            var RetVal = new StringBuilder(255);
-            GetPrivateProfileString(Section ?? EXE, Key, "", RetVal, 255, Path);
-            return RetVal.ToString();
+            var retVal = new StringBuilder(255);
+            GetPrivateProfileString(section ?? _exe, key, "", retVal, 255, _path);
+            return retVal.ToString();
         }
 
-        public void IniWrite(string Key, string Value, string Section = null)
+        public void IniWrite(string key, string value, string section = null)
         {
-            WritePrivateProfileString(Section ?? EXE, Key, Value, Path);
+            WritePrivateProfileString(section ?? _exe, key, value, _path);
         }
 
-        public void IniDeleteKey(string Key, string Section = null)
-        {
-            IniWrite(Key, null, Section ?? EXE);
-        }
-
-        public void IniDeleteSection(string Section = null)
-        {
-            IniWrite(null, null, Section ?? EXE);
-        }
-
-        public bool IniKeyExists(string Key, string Section = null)
-        {
-            return IniRead(Key, Section).Length > 0;
-        }
-
-        //registry key management >
-        public string RegReadKeyValue(string subKey, string key)
+        //registry key management ... >
+        public static string RegReadKeyValue(string subKey, string key)
 
         {
-            string str = string.Empty;
+            var str = string.Empty;
 
-            using (RegistryKey registryKey = Registry.CurrentUser.OpenSubKey(subKey))
+            using (var registryKey = Registry.CurrentUser.OpenSubKey(subKey))
 
             {
-                if (registryKey != null)
-                {
-                    str = registryKey.GetValue(key).ToString();
-                    registryKey.Close();
-                }
+                if (registryKey == null) return str;
+                str = registryKey.GetValue(key).ToString();
+                registryKey.Close();
             }
             return str;
         }
 
-        //xml file management >
-        public string XmlRead(string FullXmlFilePath)
+        //xml file management ... >
+        public static string XmlRead(string fullXmlFilePath)
         {
-            string str = string.Empty;
+            var str = string.Empty;
 
-            XDocument doc = XDocument.Load(FullXmlFilePath);
+            var doc = XDocument.Load(fullXmlFilePath);
             var selectors = from elements in doc.Elements("profile").Elements("info")
                             select elements;
 
             foreach (var element in selectors)
             {
-                str = element.Element("profile_name").Value;
+                str = element.Element("profile_name")?.Value;
             }
-
             return str;
         }
     }

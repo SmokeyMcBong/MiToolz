@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("MiToolz")]
-[assembly: AssemblyCopyright("Copyright © TheFONZ 2020")]
+[assembly: AssemblyCopyright("Copyright ©  2020  theFONZ")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -50,4 +50,4 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("2.8.4.0")]
+[assembly: AssemblyFileVersion("3.0.0.0")]

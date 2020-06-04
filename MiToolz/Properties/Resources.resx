@@ -121,8 +121,23 @@
   <data name="AppIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AppIcon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="DefaultAppHotKey" xml:space="preserve">
+    <value>M</value>
+  </data>
+  <data name="DefaultAppTheme" xml:space="preserve">
+    <value>Dark.Blue</value>
+  </data>
+  <data name="DefaultMonitoringEnabled" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="DefaultOCProfile" xml:space="preserve">
     <value>5</value>
+  </data>
+  <data name="DefaultSoundSwitchHotKey" xml:space="preserve">
+    <value>F9</value>
+  </data>
+  <data name="DefaultSoundSwitchHotKeyModifier" xml:space="preserve">
+    <value>Ctrl</value>
   </data>
   <data name="DefaultStockProfile" xml:space="preserve">
     <value>1</value>
@@ -144,6 +159,9 @@
   </data>
   <data name="Image_SaveIni" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Image_SaveIni.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Image_SoundSwitch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Image_SoundSwitch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="MSIAB_FilePath" xml:space="preserve">
     <value>C:\Program Files (x86)\MSI Afterburner\MSIAfterburner.exe</value>
