@@ -27,7 +27,7 @@
         <DataTemplate>
             <Grid Width="{TemplateBinding Width}"
                   Height="{TemplateBinding Height}"
-                  Margin="4"
+                  Margin="2"
                   Background="Transparent"
                   RenderOptions.EdgeMode="Aliased"
                   RenderOptions.BitmapScalingMode="HighQuality">
@@ -35,7 +35,7 @@
                     <Rectangle.Fill>
                         <VisualBrush>
                             <VisualBrush.Visual>
-                                <Image Source="pack://siteoforigin:,,,/Resources/AppIcon.ico"
+                                <Image Source="pack://siteoforigin:,,,/Resources/App_Icon.ico"
                                        Stretch="Uniform" />
                             </VisualBrush.Visual>
                         </VisualBrush>
@@ -480,11 +480,11 @@
                     <Image Height="37"
                            VerticalAlignment="Top"
                            Margin="449,126,66,0"
-                           Source="pack://siteoforigin:,,,/Resources/AppIcon.ico"
+                           Source="pack://siteoforigin:,,,/Resources/App_Icon.ico"
                            Cursor="Help"
-                           ToolTip="Build Date : 24-06-2020" />
+                           ToolTip="Build Date : 25-06-2020" />
                     <TextBlock TextWrapping="Wrap"
-                               Text="MiToolz v3.1.0"
+                               Text="MiToolz v3.1.1"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
                                Margin="449,166,66,0"
