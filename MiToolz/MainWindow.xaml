@@ -89,6 +89,7 @@
                   IsTabStop="False">
             <TextBlock x:Name="CoreSpeed"
                        Foreground="Black"
+                       Opacity="0.8"
                        FontSize="17"
                        FontStyle="Normal"
                        FontWeight="Bold">
@@ -106,6 +107,7 @@
                   IsTabStop="False">
             <TextBlock x:Name="MemSpeed"
                        Foreground="Black"
+                       Opacity="0.8"
                        FontSize="17"
                        FontStyle="Normal"
                        FontWeight="Bold">
@@ -123,6 +125,7 @@
                   IsTabStop="False">
             <TextBlock x:Name="CoreLoad"
                        Foreground="Black"
+                       Opacity="0.8"
                        FontSize="17"
                        FontStyle="Normal"
                        FontWeight="Bold">
@@ -140,6 +143,7 @@
                   IsTabStop="False">
             <TextBlock x:Name="MemLoad"
                        Foreground="Black"
+                       Opacity="0.8"
                        FontSize="17"
                        FontStyle="Normal"
                        FontWeight="Bold">
@@ -157,6 +161,7 @@
                   IsTabStop="False">
             <TextBlock x:Name="CoreTemp"
                        Foreground="Black"
+                       Opacity="0.8"
                        FontSize="17"
                        FontStyle="Normal"
                        FontWeight="Bold">
@@ -174,6 +179,7 @@
                   IsTabStop="False">
             <TextBlock x:Name="TotalPower"
                        Foreground="Black"
+                       Opacity="0.8"
                        FontSize="17"
                        FontStyle="Normal"
                        FontWeight="Bold">
@@ -476,9 +482,9 @@
                            Margin="449,126,66,0"
                            Source="AppIcon.ico"
                            Cursor="Help"
-                           ToolTip="Build Date : 03-06-2020" />
+                           ToolTip="Build Date : 24-06-2020" />
                     <TextBlock TextWrapping="Wrap"
-                               Text="MiToolz v3.0.0"
+                               Text="MiToolz v3.0.1"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
                                Margin="449,166,66,0"

@@ -4,7 +4,6 @@ using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -31,8 +30,8 @@ namespace MiToolz
         private static string _appHotKey;
         private static string _soundSwitchHotKeyModifier;
         private static string _soundSwitchHotKey;
-        private const int DelayN = 500;
-        private const int DelayL = 1000;
+        private const int DelayShort = 500;
+        private const int DelayLong = 1000;
 
         public MainWindow()
         {
@@ -305,7 +304,8 @@ namespace MiToolz
                                         {
                                             if (sensor.Value.Value >= 0)
                                             {
-                                                curGpuTemp = sensor.Value.GetValueOrDefault().ToString(CultureInfo.CurrentCulture) + " °C";
+                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                curGpuTemp = roundValue + " °C";
                                             }
                                             else
                                             {
@@ -321,7 +321,8 @@ namespace MiToolz
                                         {
                                             if (sensor.Value.Value >= 0)
                                             {
-                                                curGpuLoad = sensor.Value.GetValueOrDefault().ToString(CultureInfo.CurrentCulture) + " %";
+                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                curGpuLoad = roundValue + " %";
                                             }
                                             else
                                             {
@@ -329,11 +330,12 @@ namespace MiToolz
                                             }
                                         }
 
-                                        if (sensor.Name.Contains("Memory Controller"))
+                                        if (sensor.Name.Contains("Memory"))
                                         {
                                             if (sensor.Value.Value >= 0)
                                             {
-                                                curMemLoad = sensor.Value.GetValueOrDefault().ToString(CultureInfo.CurrentCulture) + " %";
+                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                curMemLoad = roundValue + " %";
                                             }
                                             else
                                             {
@@ -403,7 +405,7 @@ namespace MiToolz
                             TotalPower.Text = power;
                         });
                     }
-                    await Task.Delay(DelayN);
+                    await Task.Delay(DelayShort);
                 }
             });
         }
@@ -449,7 +451,7 @@ namespace MiToolz
 
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(DelayL);
+                await Task.Delay(DelayLong);
 
                 //after setting the profile terminate MSIAfterburner process
                 TerminateApp("MSIAfterburner");
