@@ -15,8 +15,8 @@ namespace MiToolz
             {
                 var controlsMainTiles = new List<Tile>
                 {
-                    _mw.GpuStockTile,
-                    _mw.GpuOcTile,
+                    _mw.GpuTile,
+                    _mw.PowerPlanTile,
                     _mw.AudioTile,
                     _mw.MsIabTile,
                     _mw.SoundSwitchTile

@@ -186,6 +186,16 @@ namespace MiToolz.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Image_PowerPlan {
+            get {
+                object obj = ResourceManager.GetObject("Image_PowerPlan", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Image_SaveIni {
             get {
                 object obj = ResourceManager.GetObject("Image_SaveIni", resourceCulture);
@@ -218,6 +228,24 @@ namespace MiToolz.Properties {
         internal static string MyConfigManager {
             get {
                 return ResourceManager.GetString("MyConfigManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 381b4222-f694-41f0-9685-ff5bb260df2e.
+        /// </summary>
+        internal static string PowerPlanBalanced {
+            get {
+                return ResourceManager.GetString("PowerPlanBalanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c.
+        /// </summary>
+        internal static string PowerPlanPerformance {
+            get {
+                return ResourceManager.GetString("PowerPlanPerformance", resourceCulture);
             }
         }
         

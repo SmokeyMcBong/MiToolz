@@ -22,6 +22,9 @@ namespace MiToolz
         private static string _activeProfile;
         private static string _stockProfile;
         private static string _ocProfile;
+        private static string _activePowerPlan;
+        private static string _powerPlanBalanced;
+        private static string _powerPlanPerformance;
         private static string _sbControlFile;
         private static string _sbControlActiveProfile;
         private static string _msiabFile;
@@ -44,6 +47,7 @@ namespace MiToolz
             SetAppTheme();
             ShowActiveAudioProfile();
             ShowActiveGpuProfile();
+            ShowActivePowerPlan();
             SetupComboListSources();
 
             //add MainWindow event handlers
@@ -74,6 +78,8 @@ namespace MiToolz
             var msiabFilePath = Properties.Resources.MSIAB_FilePath;
             var defaultStockProfile = Properties.Resources.DefaultStockProfile;
             var defaultOcProfile = Properties.Resources.DefaultOCProfile;
+            var powerPlanBalanced = Properties.Resources.PowerPlanBalanced;
+            var powerPlanPerformance = Properties.Resources.PowerPlanPerformance;
             var defaultMonitoringEnabled = Properties.Resources.DefaultMonitoringEnabled;
             var defaultAppTheme = Properties.Resources.DefaultAppTheme;
             var defaultAppHotKey = Properties.Resources.DefaultAppHotKey;
@@ -84,6 +90,8 @@ namespace MiToolz
             {
                 ConfigManager.IniWrite("StockProfile", defaultStockProfile);
                 ConfigManager.IniWrite("OCProfile", defaultOcProfile);
+                ConfigManager.IniWrite("PowerPlanBalanced", powerPlanBalanced);
+                ConfigManager.IniWrite("PowerPlanPerformance", powerPlanPerformance);
                 ConfigManager.IniWrite("SBControl_File", sbControlFilePath);
                 ConfigManager.IniWrite("MSIAB_File", msiabFilePath);
                 ConfigManager.IniWrite("IsMonitoringEnabled", defaultMonitoringEnabled);
@@ -104,6 +112,8 @@ namespace MiToolz
         {
             _stockProfile = ConfigManager.IniRead("StockProfile");
             _ocProfile = ConfigManager.IniRead("OCProfile");
+            _powerPlanBalanced = ConfigManager.IniRead("PowerPlanBalanced");
+            _powerPlanPerformance = ConfigManager.IniRead("PowerPlanPerformance");
             _sbControlFile = ConfigManager.IniRead("SBControl_File");
             _msiabFile = ConfigManager.IniRead("MSIAB_File");
             _isMonitoringEnabled = ConfigManager.IniRead("IsMonitoringEnabled");
@@ -160,18 +170,6 @@ namespace MiToolz
             }
         }
 
-        //show which Audio profile is active
-        private void ShowActiveAudioProfile()
-        {
-            var sbAp = " " + _sbControlActiveProfile + " ";
-            var sbBadge = AudioProfileBadge.Badge.ToString();
-
-            if (sbBadge != sbAp)
-            {
-                AudioProfileBadge.Badge = " " + _sbControlActiveProfile + " ";
-            }
-        }
-
         //determine which profile is active by checking if power.limit is greater than default_power.limit
         private void ShowActiveGpuProfile()
         {
@@ -205,16 +203,63 @@ namespace MiToolz
 
             if (activePLvalue > defaultPLvalue)
             {
-                OcProfileBadge.Badge = " Enabled ";
-                StockProfileBadge.Badge = "";
+                GpuProfileBadge.Badge = " Overclock ";
             }
             else
             {
-                StockProfileBadge.Badge = " Enabled ";
-                OcProfileBadge.Badge = "";
+                GpuProfileBadge.Badge = " Default ";
             }
 
             showProfileProcess.WaitForExit();
+        }
+
+        //show which Audio profile is active
+        private void ShowActiveAudioProfile()
+        {
+            var soundBlasterActiveProfile = " " + _sbControlActiveProfile + " ";
+            var soundBlasterBadge = AudioProfileBadge.Badge.ToString();
+
+            if (soundBlasterBadge != soundBlasterActiveProfile)
+            {
+                AudioProfileBadge.Badge = " " + _sbControlActiveProfile + " ";
+            }
+        }
+
+        //show which Power Plan is active
+        private void ShowActivePowerPlan()
+        {
+            // get active power plan
+            var getActivePowerPlan = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "powercfg",
+                    Arguments = "/GetActiveScheme",
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true
+                }
+            };
+            getActivePowerPlan.Start();
+
+            var activePlan = getActivePowerPlan.StandardOutput.ReadToEnd();
+            getActivePowerPlan.WaitForExit();
+
+            if (activePlan.Contains(_powerPlanBalanced))
+            {
+                _activePowerPlan = " " + "Balanced" + " ";
+            }
+            if (activePlan.Contains(_powerPlanPerformance))
+            {
+                _activePowerPlan = " " + "Performance" + " ";
+            }
+
+            if (PowerPlanBadge.ToString() != _activePowerPlan)
+            {
+                PowerPlanBadge.Badge = _activePowerPlan;
+            }
         }
 
         private void SetupComboListSources()
@@ -420,15 +465,19 @@ namespace MiToolz
         }
 
         // Set Stock GPU profile
-        private void GpuStockTile_OnClick(object sender, RoutedEventArgs e)
+        private void GpuTile_OnClick(object sender, RoutedEventArgs e)
         {
-            ApplyProfile("SetStock");
-        }
+            var badgeString = GpuProfileBadge.Badge.ToString();
 
-        // Set Overclock GPU profile
-        private void GpuOcTile_OnClick(object sender, RoutedEventArgs e)
-        {
-            ApplyProfile("SetOC");
+            switch (badgeString)
+            {
+                case " Overclock ":
+                    ApplyProfile("SetStock");
+                    break;
+                case " Default ":
+                    ApplyProfile("SetOC");
+                    break;
+            }
         }
 
         //Apply selected profile
@@ -460,7 +509,7 @@ namespace MiToolz
             });
         }
 
-        // Open SoundBlaster Control Panel
+        //open SoundBlaster Control Panel
         private void AudioTile_OnClick(object sender, RoutedEventArgs e)
         {
             var sbControlProcess = new Process
@@ -472,6 +521,38 @@ namespace MiToolz
             };
             sbControlProcess.Start();
         }
+
+        //apply Power Plan Scheme
+        private void PowerPlanTile_OnCLick(object sender, RoutedEventArgs e)
+        {
+            var badgeString = PowerPlanBadge.Badge.ToString();
+
+            switch (badgeString)
+            {
+                case " Balanced ":
+                    ApplyPowerPlan(_powerPlanPerformance);
+                    break;
+                case " Performance ":
+                    ApplyPowerPlan(_powerPlanBalanced);
+                    break;
+            }
+        }
+
+        //Apply selected profile
+        private static void ApplyPowerPlan(string powerPlan)
+        {
+            // set active power plan from Powercfg
+            var setActivePowerPlan = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "powercfg",
+                    Arguments = "/s " + powerPlan
+                }
+            };
+            setActivePowerPlan.Start();
+        }
+
 
         //open MSIAfterburner application
         private void MsIabTile_OnClick(object sender, RoutedEventArgs e)
@@ -703,18 +784,12 @@ namespace MiToolz
         private void AiOHotKey(object sender, KeyEventArgs e)
         {
             var keyPress = e.Key.ToString();
-            if (keyPress.Contains(_soundSwitchHotKeyModifier) || keyPress.Contains(_soundSwitchHotKey)) return;
 
+            if (keyPress.Contains(_soundSwitchHotKeyModifier) || keyPress.Contains(_soundSwitchHotKey)) return;
             if (!keyPress.Contains(_appHotKey)) return;
-            if (OcProfileBadge.Badge.ToString() == " Enabled ")
-            {
-                ApplyProfile("SetStock");
-            }
-            if (StockProfileBadge.Badge.ToString() == " Enabled ")
-            {
-                ApplyProfile("SetOC");
-            }
-            AudioTile_OnClick(sender, e);
+
+            GpuTile_OnClick(sender, e);
+            PowerPlanTile_OnCLick(sender, e);
         }
 
         //reflect updated settings in UI when window is re-focused
@@ -723,6 +798,7 @@ namespace MiToolz
             ReadSettings();
             ShowActiveAudioProfile();
             ShowActiveGpuProfile();
+            ShowActivePowerPlan();
             SetComboListIndexes();
             // kill SoundBlaster Control Panel if running when app is refocused
             TerminateApp("SBAdgyFx");

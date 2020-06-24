@@ -200,9 +200,9 @@
                 </TransformGroup>
             </Separator.RenderTransform>
         </Separator>
-        <mah:Tile x:Name="GpuStockTile"
-                  Click="GpuStockTile_OnClick"
-                  Title="Stock Profile"
+        <mah:Tile x:Name="GpuTile"
+                  Click="GpuTile_OnClick"
+                  Title="GPU Profile"
                   TitleFontSize="17"
                   HorizontalTitleAlignment="Right"
                   Margin="267,50,0,0"
@@ -213,7 +213,7 @@
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
                   IsTabStop="False">
-            <mah:Badged x:Name="StockProfileBadge"
+            <mah:Badged x:Name="GpuProfileBadge"
                         Badge=""
                         BadgeForeground="Black"
                         BadgePlacementMode="Top"
@@ -225,12 +225,12 @@
                        Height="130" />
             </mah:Badged>
         </mah:Tile>
-        <mah:Tile x:Name="GpuOcTile"
-                  Click="GpuOcTile_OnClick"
-                  Title="OC Profile"
+        <mah:Tile x:Name="PowerPlanTile"
+                  Click="PowerPlanTile_OnCLick"
+                  Title="Power Plan"
                   TitleFontSize="17"
                   HorizontalTitleAlignment="Right"
-                  Margin="412,50,0,0"
+                  Margin="557,50,0,0"
                   mah:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   Background="{DynamicResource MahApps.Brushes.Accent}"
                   Cursor="Hand"
@@ -238,14 +238,14 @@
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
                   IsTabStop="False">
-            <mah:Badged x:Name="OcProfileBadge"
+            <mah:Badged x:Name="PowerPlanBadge"
                         Badge=""
                         BadgeForeground="Black"
                         BadgePlacementMode="Top"
                         BadgeBackground="DarkGray">
                 <Image VerticalAlignment="Center"
                        HorizontalAlignment="Center"
-                       Source="pack://siteoforigin:,,,/Resources/Image_GPU.png"
+                       Source="pack://siteoforigin:,,,/Resources/Image_PowerPlan.png"
                        Width="130"
                        Height="130" />
             </mah:Badged>
@@ -255,7 +255,7 @@
                   Title="Audio Profile"
                   TitleFontSize="17"
                   HorizontalTitleAlignment="Right"
-                  Margin="557,50,0,0"
+                  Margin="412,50,0,0"
                   mah:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   Background="{DynamicResource MahApps.Brushes.Accent}"
                   Cursor="Hand"
@@ -480,11 +480,11 @@
                     <Image Height="37"
                            VerticalAlignment="Top"
                            Margin="449,126,66,0"
-                           Source="AppIcon.ico"
+                           Source="pack://siteoforigin:,,,/Resources/AppIcon.ico"
                            Cursor="Help"
                            ToolTip="Build Date : 24-06-2020" />
                     <TextBlock TextWrapping="Wrap"
-                               Text="MiToolz v3.0.1"
+                               Text="MiToolz v3.1.0"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
                                Margin="449,166,66,0"
