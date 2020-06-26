@@ -57,6 +57,10 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\App_Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx">
       <HintPath>Libs\ControlzEx.dll</HintPath>
@@ -69,6 +73,9 @@
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors">
       <HintPath>Libs\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio">
+      <HintPath>Libs\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -89,7 +96,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ListManager.cs" />
-    <Compile Include="KeyManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -123,6 +129,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -142,22 +149,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Image_MenuExpand.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Image_MenuRetract.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Image_MSIab.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Image_SaveIni.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -188,5 +180,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Image_DeviceSwitcher.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if exist "$(TargetDir)nircmdc.exe" exit
+xcopy /E "$(ProjectDir)Libs\nircmdc.exe"  "$(TargetDir)"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

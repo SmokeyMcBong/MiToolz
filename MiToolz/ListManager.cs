@@ -1,13 +1,45 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
+using NAudio.CoreAudioApi;
 
 namespace MiToolz
 {
     internal class ListManager
     {
         private readonly MainWindow _mw = (MainWindow)Application.Current.MainWindow;
+
+        private static readonly MMDeviceEnumerator Enumerator = new MMDeviceEnumerator();
+
+        internal static List<string> AudioDevicesList
+        {
+            get
+            {
+                var audioDevicesList = new List<string>();
+                foreach (var endpoint in
+                    Enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active))
+                {
+                    var audioDevices = endpoint.FriendlyName;
+                    const string pattern = @"(?: ?[(\[][^)\]]+.)*$";
+                    var result = Regex.Replace(audioDevices, pattern, string.Empty);
+                    audioDevicesList.Add(result);
+                }
+                return audioDevicesList;
+            }
+        }
+
+        internal static string DefaultAudioDevice
+        {
+            get
+            {
+                var defaultAudioOutput = Enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia).FriendlyName;
+                const string pattern = @"(?: ?[(\[][^)\]]+.)*$";
+                var result = Regex.Replace(defaultAudioOutput, pattern, string.Empty);
+                return result;
+            }
+        }
 
         internal IEnumerable<Tile> ControlsMainTiles
         {
@@ -19,7 +51,7 @@ namespace MiToolz
                     _mw.PowerPlanTile,
                     _mw.AudioTile,
                     _mw.MsIabTile,
-                    _mw.SoundSwitchTile
+                    _mw.AudioDeviceSwitchTile
                 };
                 return controlsMainTiles;
             }
@@ -36,7 +68,9 @@ namespace MiToolz
                     _mw.CoreLoad,
                     _mw.MemLoad,
                     _mw.CoreTemp,
-                    _mw.TotalPower
+                    _mw.TotalPower,
+                    _mw.CpuSpeed,
+                    _mw.CpuTemp
                 };
                 return controlsTextBlocks;
             }
@@ -53,7 +87,9 @@ namespace MiToolz
                     _mw.CoreLoadTile,
                     _mw.MemLoadTile,
                     _mw.CoreTempTile,
-                    _mw.TotalPowerTile
+                    _mw.TotalPowerTile,
+                    _mw.CpuSpeedTile,
+                    _mw.CpuTempTile
                 };
                 return controlsTiles;
             }
@@ -119,22 +155,7 @@ namespace MiToolz
             }
         }
 
-        internal static List<string> HotKeyModifier
-        {
-            get
-            {
-                var hotKeyModifier = new List<string>
-                {
-                    "--",
-                    "Ctrl",
-                    "Shft",
-                    "Alt"
-                };
-                return hotKeyModifier;
-            }
-        }
-
-        internal static List<string> HotKeyMsiAb
+        internal static List<string> MsiAbProfileList
         {
             get
             {

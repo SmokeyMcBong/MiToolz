@@ -71,20 +71,38 @@ namespace MiToolz.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to M.
-        /// </summary>
-        internal static string DefaultAppHotKey {
-            get {
-                return ResourceManager.GetString("DefaultAppHotKey", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Dark.Blue.
         /// </summary>
         internal static string DefaultAppTheme {
             get {
                 return ResourceManager.GetString("DefaultAppTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A.
+        /// </summary>
+        internal static string DefaultAudioDeviceSwitchHotKey {
+            get {
+                return ResourceManager.GetString("DefaultAudioDeviceSwitchHotKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Q.
+        /// </summary>
+        internal static string DefaultExitAppHotkey {
+            get {
+                return ResourceManager.GetString("DefaultExitAppHotkey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to G.
+        /// </summary>
+        internal static string DefaultGameModeHotKey {
+            get {
+                return ResourceManager.GetString("DefaultGameModeHotKey", resourceCulture);
             }
         }
         
@@ -103,24 +121,6 @@ namespace MiToolz.Properties {
         internal static string DefaultOCProfile {
             get {
                 return ResourceManager.GetString("DefaultOCProfile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to F9.
-        /// </summary>
-        internal static string DefaultSoundSwitchHotKey {
-            get {
-                return ResourceManager.GetString("DefaultSoundSwitchHotKey", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ctrl.
-        /// </summary>
-        internal static string DefaultSoundSwitchHotKeyModifier {
-            get {
-                return ResourceManager.GetString("DefaultSoundSwitchHotKeyModifier", resourceCulture);
             }
         }
         
@@ -146,29 +146,19 @@ namespace MiToolz.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Image_DeviceSwitcher {
+            get {
+                object obj = ResourceManager.GetObject("Image_DeviceSwitcher", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Image_GPU {
             get {
                 object obj = ResourceManager.GetObject("Image_GPU", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Image_MenuExpand {
-            get {
-                object obj = ResourceManager.GetObject("Image_MenuExpand", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Image_MenuRetract {
-            get {
-                object obj = ResourceManager.GetObject("Image_MenuRetract", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -189,16 +179,6 @@ namespace MiToolz.Properties {
         internal static System.Drawing.Bitmap Image_PowerPlan {
             get {
                 object obj = ResourceManager.GetObject("Image_PowerPlan", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Image_SaveIni {
-            get {
-                object obj = ResourceManager.GetObject("Image_SaveIni", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

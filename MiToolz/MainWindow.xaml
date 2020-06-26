@@ -5,9 +5,9 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  Title="MiToolz"
-                 Height="350"
-                 Width="724"
-                 KeyUp="AiOHotKey"
+                 Height="380.667"
+                 Width="742"
+                 KeyUp="HotKeyManager"
                  TitleCharacterCasing="Normal"
                  ShowIconOnTitleBar="True"
                  ShowTitleBar="True"
@@ -70,10 +70,10 @@
           HorizontalAlignment="Right"
           Margin="0,0,4,-2">
         <mah:ToggleSwitch x:Name="CheckboxEnableMonitor"
-                          OnContent="GPU Monitoring"
-                          OffContent="GPU Monitoring"
+                          OnContent="System Monitoring"
+                          OffContent="System Monitoring"
                           Toggled="ToggleSwitch_EnableMonitor"
-                          Margin="40,10,0,283"
+                          Margin="29,10,0,314"
                           Height="30"
                           Cursor="Hand"
                           IsTabStop="False" />
@@ -82,7 +82,7 @@
                   TitleFontSize="13"
                   HorizontalTitleAlignment="Right"
                   Margin="10,50,0,0"
-                  Height="79"
+                  Height="65"
                   Width="106"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
@@ -100,7 +100,7 @@
                   TitleFontSize="13"
                   HorizontalTitleAlignment="Right"
                   Margin="121,50,0,0"
-                  Height="79"
+                  Height="65"
                   Width="106"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
@@ -117,8 +117,8 @@
                   Title="Core Load"
                   TitleFontSize="13"
                   HorizontalTitleAlignment="Right"
-                  Margin="10,134,0,0"
-                  Height="78"
+                  Margin="10,120,0,0"
+                  Height="65"
                   Width="106"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
@@ -135,8 +135,8 @@
                   Title="Mem Load"
                   TitleFontSize="13"
                   HorizontalTitleAlignment="Right"
-                  Margin="121,134,0,0"
-                  Height="78"
+                  Margin="121,120,0,0"
+                  Height="65"
                   Width="106"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
@@ -153,8 +153,8 @@
                   Title="Core Temp"
                   TitleFontSize="13"
                   HorizontalTitleAlignment="Right"
-                  Margin="10,217,0,0"
-                  Height="78"
+                  Margin="121,190,0,0"
+                  Height="65"
                   Width="106"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
@@ -171,8 +171,8 @@
                   Title="Total Power"
                   TitleFontSize="13"
                   HorizontalTitleAlignment="Right"
-                  Margin="121,217,0,0"
-                  Height="78"
+                  Margin="10,190,0,0"
+                  Height="65"
                   Width="106"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
@@ -185,11 +185,45 @@
                        FontWeight="Bold">
             </TextBlock>
         </mah:Tile>
+        <mah:Tile x:Name="CpuTempTile"
+                  Title="Core Temp"
+                  TitleFontSize="13"
+                  HorizontalTitleAlignment="Right"
+                  Margin="121,259,0,0"
+                  Height="65"
+                  Width="106"
+                  VerticalAlignment="Top"
+                  HorizontalAlignment="Left"
+                  IsTabStop="False">
+            <TextBlock x:Name="CpuTemp"
+                       Foreground="Black"
+                       Opacity="0.8"
+                       FontSize="17"
+                       FontStyle="Normal"
+                       FontWeight="Bold" />
+        </mah:Tile>
+        <mah:Tile x:Name="CpuSpeedTile"
+                  Title="Core Speed"
+                  TitleFontSize="13"
+                  HorizontalTitleAlignment="Right"
+                  Margin="10,260,0,0"
+                  Height="65"
+                  Width="106"
+                  VerticalAlignment="Top"
+                  HorizontalAlignment="Left"
+                  IsTabStop="False">
+            <TextBlock x:Name="CpuSpeed"
+                       Foreground="Black"
+                       Opacity="0.8"
+                       FontSize="17"
+                       FontStyle="Normal"
+                       FontWeight="Bold" />
+        </mah:Tile>
         <Separator HorizontalAlignment="Left"
                    Height="40"
-                   Margin="127,152,0,0"
+                   Margin="110,168,0,0"
                    VerticalAlignment="Top"
-                   Width="242"
+                   Width="275"
                    RenderTransformOrigin="0.5,0.5">
             <Separator.RenderTransform>
                 <TransformGroup>
@@ -284,8 +318,8 @@
                   mah:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   Background="{DynamicResource MahApps.Brushes.Accent}"
                   Cursor="Hand"
-                  Height="78"
-                  Width="285"
+                  Height="108"
+                  Width="213"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
                   IsTabStop="False">
@@ -295,25 +329,32 @@
                    Width="119"
                    Height="71" />
         </mah:Tile>
-        <mah:Tile x:Name="SoundSwitchTile"
-                  Click="SoundSwitchTile_OnClick"
-                  Title="Switch Device"
+        <mah:Tile x:Name="AudioDeviceSwitchTile"
+                  Click="AudioDeviceSwitchTile_OnClick"
+                  Title="Audio Output Device"
                   TitleFontSize="14"
                   HorizontalTitleAlignment="Right"
-                  Margin="557,217,0,0"
+                  Margin="485,217,0,0"
                   mah:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   Background="{DynamicResource MahApps.Brushes.Accent}"
                   Cursor="Hand"
-                  Height="78"
-                  Width="140"
+                  Height="108"
+                  Width="212"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
                   IsTabStop="False">
-            <Image VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Source="pack://siteoforigin:,,,/Resources/Image_SoundSwitch.png"
-                   Width="68"
-                   Height="62" />
+            <mah:Badged x:Name="AudioDeviceBadge"
+                        Badge=""
+                        BadgeForeground="Black"
+                        BadgePlacementMode="Top"
+                        BadgeBackground="DarkGray"
+                        Height="76">
+                <Image VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Source="pack://siteoforigin:,,,/Resources/Image_DeviceSwitcher.png"
+                       Width="68"
+                       Height="62" />
+            </mah:Badged>
         </mah:Tile>
 
         <Grid x:Name="SettingsDialog"
@@ -323,85 +364,86 @@
                     HorizontalAlignment="Left"
                     Height="10"
                     VerticalAlignment="Top"
-                    Width="726"
-                    Margin="-8,56,-8,0" />
+                    Width="740"
+                    Margin="-22,56,-8,0" />
             <Border Background="{DynamicResource MahApps.Brushes.Accent}"
                     BorderThickness="0"
                     HorizontalAlignment="Left"
                     Height="10"
                     VerticalAlignment="Top"
-                    Width="726"
-                    Margin="-8,278,-8,0" />
-            <mah:CustomDialog Height="212"
+                    Width="740"
+                    Margin="-22,308,-8,0" />
+            <mah:CustomDialog Height="242"
                               Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
                               BorderBrush="White"
-                              Margin="-8,66,-8,0"
+                              Margin="-22,66,-8,0"
                               VerticalAlignment="Top">
-                <Grid Margin="-162,0,-161,10">
+                <Grid Margin="-162,0,-152,10">
                     <RadioButton Checked="RadioRedTheme_OnChecked"
                                  x:Name="RadioRedTheme"
                                  Content="Red Theme"
                                  Cursor="Hand"
-                                 Margin="94,20,457,148"
+                                 Margin="26,26,524,174"
                                  IsTabStop="False" />
                     <RadioButton Checked="RadioAmberTheme_OnChecked"
                                  x:Name="RadioAmberTheme"
                                  Content="Amber Theme"
                                  Cursor="Hand"
-                                 Margin="94,44,457,124"
+                                 Margin="26,53,524,147"
                                  IsTabStop="False" />
                     <RadioButton Checked="RadioBlueTheme_OnChecked"
                                  x:Name="RadioBlueTheme"
                                  Content="Blue Theme"
                                  Cursor="Hand"
-                                 Margin="94,68,457,100"
+                                 Margin="26,80,524,120"
                                  IsTabStop="False" />
                     <RadioButton Checked="RadioPurpleTheme_OnChecked"
                                  x:Name="RadioPurpleTheme"
                                  Content="Purple Theme"
                                  Cursor="Hand"
-                                 Margin="94,92,457,76"
+                                 Margin="26,107,524,93"
                                  IsTabStop="False" />
                     <RadioButton Checked="RadioGreenTheme_OnChecked"
                                  x:Name="RadioGreenTheme"
                                  Content="Green Theme"
                                  Cursor="Hand"
-                                 Margin="94,116,457,52"
+                                 Margin="26,134,524,66"
                                  IsTabStop="False" />
                     <RadioButton Checked="RadioTealTheme_OnChecked"
                                  x:Name="RadioTealTheme"
                                  Content="Teal Theme"
                                  Cursor="Hand"
-                                 Margin="94,140,457,28"
+                                 Margin="26,161,524,39"
                                  IsTabStop="False" />
                     <RadioButton Checked="RadioSteelTheme_OnChecked"
                                  x:Name="RadioSteelTheme"
                                  Content="Steel Theme"
                                  Cursor="Hand"
-                                 Margin="94,164,457,4"
+                                 Margin="26,188,524,12"
                                  IsTabStop="False" />
                     <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1"
                             HorizontalAlignment="Left"
-                            Height="192"
+                            Height="222"
                             VerticalAlignment="Top"
-                            Width="172"
-                            Margin="59,0,0,0">
+                            Width="147"
+                            Margin="5,0,0,0"
+                            RenderTransformOrigin="0.5,0.5">
                         <TextBlock TextWrapping="Wrap"
                                    Text="MiToolz Theme"
                                    VerticalAlignment="Center"
                                    TextAlignment="Center"
                                    Background="{DynamicResource MahApps.Brushes.Accent}"
-                                   Margin="0,-1,-1,175"
+                                   Margin="0,-1,-1,205"
                                    Height="16" />
                     </Border>
                     <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1"
                             HorizontalAlignment="Left"
-                            Height="92"
+                            Height="110"
                             VerticalAlignment="Top"
-                            Width="172"
-                            Margin="254,0,0,0">
+                            Width="226"
+                            Margin="162,0,0,0">
                         <TextBlock TextWrapping="Wrap"
                                    Text="MSI Afterburner"
                                    TextAlignment="Center"
@@ -414,7 +456,7 @@
                               SelectionChanged="DefaultProfileList_OnSelectionChanged"
                               VerticalAlignment="Top"
                               Cursor="Hand"
-                              Margin="270,56,356,0"
+                              Margin="178,72,427,0"
                               Height="12"
                               IsTabStop="False" />
                     <ComboBox x:Name="OverclockProfileList"
@@ -422,53 +464,53 @@
                               HorizontalAlignment="Left"
                               Cursor="Hand"
                               VerticalAlignment="Top"
-                              Width="60"
-                              Margin="350,56,0,0"
+                              Width="72"
+                              Margin="299,72,0,0"
                               IsTabStop="False" />
                     <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1"
                             HorizontalAlignment="Left"
-                            Height="92"
+                            Height="110"
                             VerticalAlignment="Top"
-                            Width="172"
-                            Margin="254,100,0,0">
+                            Width="286"
+                            Margin="398,0,0,0">
                         <TextBlock TextWrapping="Wrap"
-                                   Text="SoundSwitch"
+                                   Text="Audio Device Switcher"
                                    TextAlignment="Center"
                                    Background="{DynamicResource MahApps.Brushes.Accent}"
                                    Margin="0,-1,-1,0"
                                    Height="16"
                                    VerticalAlignment="Top" />
                     </Border>
-                    <ComboBox x:Name="SoundSwitchHotKeyModifier"
-                              SelectionChanged="SoundSwitchHotKeyModifier_OnSelectionChanged"
+                    <ComboBox x:Name="AudioDevice1"
+                              SelectionChanged="AudioDevice1_OnSelectionChanged"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
-                              Width="60"
+                              Width="118"
                               Cursor="Hand"
-                              Margin="270,156,0,0"
+                              Margin="411,72,0,0"
                               IsTabStop="False" />
-                    <ComboBox x:Name="SoundSwitchHotKey"
-                              SelectionChanged="SoundSwitchHotKey_OnSelectionChanged"
+                    <ComboBox x:Name="AudioDevice2"
+                              SelectionChanged="AudioDevice2_OnSelectionChanged"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
-                              Width="60"
+                              Width="118"
                               Cursor="Hand"
-                              Margin="350,156,0,0"
+                              Margin="552,72,0,0"
                               IsTabStop="False" />
                     <Label Content="&amp;"
                            HorizontalAlignment="Left"
                            HorizontalContentAlignment="Center"
                            VerticalAlignment="Top"
-                           Margin="330,156,0,0"
-                           Width="20" />
+                           Margin="530,72,0,0"
+                           Width="21" />
                     <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1"
                             HorizontalAlignment="Left"
-                            Height="92"
+                            Height="100"
                             VerticalAlignment="Top"
-                            Width="172"
-                            Margin="448,100,0,0">
+                            Width="226"
+                            Margin="162,121,0,0">
                         <TextBlock TextWrapping="Wrap"
                                    Text="About MiToolz"
                                    TextAlignment="Center"
@@ -477,53 +519,53 @@
                                    Height="16"
                                    VerticalAlignment="Top" />
                     </Border>
-                    <Image Height="37"
+                    <Image Height="43"
                            VerticalAlignment="Top"
-                           Margin="449,126,66,0"
+                           Margin="162,146,296,0"
                            Source="pack://siteoforigin:,,,/Resources/App_Icon.ico"
                            Cursor="Help"
-                           ToolTip="Build Date : 25-06-2020" />
+                           ToolTip="Build Date : 26-06-2020" />
                     <TextBlock TextWrapping="Wrap"
-                               Text="MiToolz v3.1.1"
+                               Text="MiToolz v3.2.0"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
-                               Margin="449,166,66,0"
+                               Margin="165,194,296,0"
                                Height="16" />
                     <TextBlock HorizontalAlignment="Left"
                                TextWrapping="Wrap"
                                Text="Default
-                               Profile"
+                               MSI Profile"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
-                               Margin="270,18,0,0"
-                               Width="60"
+                               Margin="178,26,0,0"
+                               Width="79"
                                Height="31" />
                     <TextBlock HorizontalAlignment="Left"
                                TextWrapping="Wrap"
-                               Text="SoundSwitch HotKey for Switching Audio Devices"
+                               Text="Select Two Audio Output Devices
+                               to Switch Between"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
-                               Margin="254,118,0,0"
-                               Width="172"
+                               Margin="398,26,0,0"
+                               Width="286"
                                Height="38" />
                     <TextBlock HorizontalAlignment="Left"
                                TextWrapping="Wrap"
-                               Text="Overclock
-                               Profile"
+                               Text="Overclock MSI Profile"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
-                               Margin="350,18,0,0"
-                               Width="60"
-                               Height="31" />
+                               Margin="299,26,0,0"
+                               Width="72"
+                               Height="30" />
                     <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1"
                             HorizontalAlignment="Left"
-                            Height="92"
+                            Height="101"
                             VerticalAlignment="Top"
-                            Width="172"
-                            Margin="448,0,0,0">
+                            Width="286"
+                            Margin="398,121,0,0">
                         <TextBlock TextWrapping="Wrap"
-                                   Text="MiToolz AiO HotKey"
+                                   Text="MiToolz HotKey's"
                                    TextAlignment="Center"
                                    Background="{DynamicResource MahApps.Brushes.Accent}"
                                    Margin="0,-1,-1,0"
@@ -532,26 +574,25 @@
                     </Border>
                     <TextBlock HorizontalAlignment="Left"
                                TextWrapping="Wrap"
-                               Text="Single AiO HotKey for 
-                               Switching All Profiles"
+                               Text="Game Mode Hotkey"
                                TextAlignment="Center"
                                VerticalAlignment="Top"
-                               Margin="448,18,0,0"
-                               Width="172"
-                               Height="34" />
-                    <ComboBox x:Name="AppHotKey"
-                              SelectionChanged="AppHotKey_OnSelectionChanged"
+                               Margin="412,143,0,0"
+                               Width="70"
+                               Height="31" />
+                    <ComboBox x:Name="GameModeHotKey"
+                              SelectionChanged="GameModeHotKey_OnSelectionChanged"
                               HorizontalAlignment="Left"
                               VerticalAlignment="Top"
-                              Width="60"
+                              Width="70"
                               Cursor="Hand"
-                              Margin="505,57,0,0"
+                              Margin="411,184,0,0"
                               IsTabStop="False" />
                     <Separator HorizontalAlignment="Left"
                                Height="36"
-                               Margin="311,36,0,0"
+                               Margin="243,44,0,0"
                                VerticalAlignment="Top"
-                               Width="58"
+                               Width="70"
                                RenderTransformOrigin="0.5,0.5">
                         <Separator.RenderTransform>
                             <TransformGroup>
@@ -562,9 +603,170 @@
                             </TransformGroup>
                         </Separator.RenderTransform>
                     </Separator>
+                    <Separator HorizontalAlignment="Left"
+                               Height="36"
+                               Margin="461,159,0,0"
+                               VerticalAlignment="Top"
+                               Width="66"
+                               RenderTransformOrigin="0.5,0.5">
+                        <Separator.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform Angle="89.904" />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Separator.RenderTransform>
+                    </Separator>
+                    <TextBlock HorizontalAlignment="Left"
+                               TextWrapping="Wrap"
+                               Text="Audio Device Hotkey"
+                               TextAlignment="Center"
+                               VerticalAlignment="Top"
+                               Margin="507,143,0,0"
+                               Width="70"
+                               Height="31" />
+                    <ComboBox x:Name="AudioDeviceHotKey"
+                              SelectionChanged="AudioDeviceHotKey_OnSelectionChanged"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Width="70"
+                              Cursor="Hand"
+                              Margin="506,184,0,0"
+                              IsTabStop="False" />
+                    <Separator HorizontalAlignment="Left"
+                               Height="36"
+                               Margin="555,159,0,0"
+                               VerticalAlignment="Top"
+                               Width="66"
+                               RenderTransformOrigin="0.5,0.5">
+                        <Separator.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform Angle="89.904" />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Separator.RenderTransform>
+                    </Separator>
+                    <TextBlock HorizontalAlignment="Left"
+                               TextWrapping="Wrap"
+                               Text="Exit App Hotkey"
+                               TextAlignment="Center"
+                               VerticalAlignment="Top"
+                               Margin="600,143,0,0"
+                               Width="70"
+                               Height="31" />
+                    <ComboBox x:Name="ExitAppHotKey"
+                              SelectionChanged="ExitAppHotKey_OnSelectionChanged"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Width="70"
+                              Cursor="Hand"
+                              Margin="600,184,0,0"
+                              IsTabStop="False" />
                 </Grid>
             </mah:CustomDialog>
         </Grid>
+
+        <Label x:Name="GpuMonitorLabel"
+               Content="               GPU Monitoring               "
+               HorizontalContentAlignment="Center"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Margin="-108,140,0,0"
+               RenderTransformOrigin="0.5,0.5"
+               Width="204">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="-90.49" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <Label x:Name="CpuMonitorLabel"
+               Content="  CPU  "
+               HorizontalContentAlignment="Center"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Margin="-38,278,0,0"
+               RenderTransformOrigin="0.5,0.5"
+               Width="65">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="-90.49" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <Separator x:Name="LabelSeperator1"
+                   HorizontalAlignment="Left"
+                   Height="40"
+                   Margin="-152,168,0,0"
+                   VerticalAlignment="Top"
+                   Width="275"
+                   RenderTransformOrigin="0.5,0.5">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="90.147" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
+        <Separator x:Name="LabelSeperator3"
+                   HorizontalAlignment="Left"
+                   Height="40"
+                   Margin="-15,238,0,0"
+                   VerticalAlignment="Top"
+                   Width="12"
+                   RenderTransformOrigin="0.5,0.5">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="179.936" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
+        <Separator x:Name="LabelSeperator2"
+                   HorizontalAlignment="Left"
+                   Height="40"
+                   Margin="-15,31,0,0"
+                   VerticalAlignment="Top"
+                   Width="12"
+                   RenderTransformOrigin="0.5,0.5">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="179.936" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
+        <Separator x:Name="LabelSeperator4"
+                   HorizontalAlignment="Left"
+                   Height="40"
+                   Margin="-15,306,0,0"
+                   VerticalAlignment="Top"
+                   Width="12"
+                   RenderTransformOrigin="0.5,0.5">
+            <Separator.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="179.936" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Separator.RenderTransform>
+        </Separator>
 
     </Grid>
 </mah:MetroWindow>

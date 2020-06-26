@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace MiToolz
 {
@@ -30,10 +32,21 @@ namespace MiToolz
         private static string _msiabFile;
         private static string _isMonitoringEnabled;
         private static string _appTheme;
-        private static string _appHotKey;
-        private static string _soundSwitchHotKeyModifier;
-        private static string _soundSwitchHotKey;
-        private const int DelayShort = 500;
+        private static string _gameModeHotKey;
+        private static string _audioDeviceSwitchHotKey;
+        private static string _exitAppHotKey;
+        private static string _audioDevice1;
+        private static string _audioDevice2;
+        private static string _defaultAudioDevice;
+        private string _gpuClock;
+        private string _gpuMemClock;
+        private string _gpuLoad;
+        private string _gpuMemLoad;
+        private string _gpuTemp;
+        private string _gpuPower;
+        private string _cpuClock;
+        private string _cpuTemp;
+        //private const int DelayShort = 500;
         private const int DelayLong = 1000;
 
         public MainWindow()
@@ -48,6 +61,7 @@ namespace MiToolz
             ShowActiveAudioProfile();
             ShowActiveGpuProfile();
             ShowActivePowerPlan();
+            ShowDefaultAudioDevice();
             SetupComboListSources();
 
             //add MainWindow event handlers
@@ -57,7 +71,8 @@ namespace MiToolz
             //start OhM Monitoring
             _thisPc = new Computer
             {
-                IsGpuEnabled = true
+                IsGpuEnabled = true,
+                IsCpuEnabled = true
             };
 
             IsMonitorEnabled();
@@ -82,9 +97,12 @@ namespace MiToolz
             var powerPlanPerformance = Properties.Resources.PowerPlanPerformance;
             var defaultMonitoringEnabled = Properties.Resources.DefaultMonitoringEnabled;
             var defaultAppTheme = Properties.Resources.DefaultAppTheme;
-            var defaultAppHotKey = Properties.Resources.DefaultAppHotKey;
-            var defaultSoundSwitchHotKeyModifier = Properties.Resources.DefaultSoundSwitchHotKeyModifier;
-            var defaultSoundSwitchHotKey = Properties.Resources.DefaultSoundSwitchHotKey;
+            var defaultGameModeHotKey = Properties.Resources.DefaultGameModeHotKey;
+            var defaultAudioDeviceSwitchHotKey = Properties.Resources.DefaultAudioDeviceSwitchHotKey;
+            var defaultExitAppHotKey = Properties.Resources.DefaultExitAppHotkey;
+            var audioDevice1 = ListManager.AudioDevicesList.ElementAt(0);
+            var audioDevice2 = ListManager.AudioDevicesList.ElementAt(1);
+            var defaultAudioDevice = ListManager.DefaultAudioDevice;
 
             if (!File.Exists(myConfigManager))
             {
@@ -96,9 +114,12 @@ namespace MiToolz
                 ConfigManager.IniWrite("MSIAB_File", msiabFilePath);
                 ConfigManager.IniWrite("IsMonitoringEnabled", defaultMonitoringEnabled);
                 ConfigManager.IniWrite("AppTheme", defaultAppTheme);
-                ConfigManager.IniWrite("AppHotKey", defaultAppHotKey);
-                ConfigManager.IniWrite("SoundSwitchHotKeyModifier", defaultSoundSwitchHotKeyModifier);
-                ConfigManager.IniWrite("SoundSwitchHotKey", defaultSoundSwitchHotKey);
+                ConfigManager.IniWrite("GameModeHotKey", defaultGameModeHotKey);
+                ConfigManager.IniWrite("AudioDeviceSwitchHotKey", defaultAudioDeviceSwitchHotKey);
+                ConfigManager.IniWrite("ExitAppHotKey", defaultExitAppHotKey);
+                ConfigManager.IniWrite("AudioDeviceNo1", audioDevice1);
+                ConfigManager.IniWrite("AudioDeviceNo2", audioDevice2);
+                ConfigManager.IniWrite("DefaultAudioDevice", defaultAudioDevice);
                 ReadSettings();
             }
             else
@@ -118,9 +139,12 @@ namespace MiToolz
             _msiabFile = ConfigManager.IniRead("MSIAB_File");
             _isMonitoringEnabled = ConfigManager.IniRead("IsMonitoringEnabled");
             _appTheme = ConfigManager.IniRead("AppTheme");
-            _appHotKey = ConfigManager.IniRead("AppHotKey");
-            _soundSwitchHotKeyModifier = ConfigManager.IniRead("SoundSwitchHotKeyModifier");
-            _soundSwitchHotKey = ConfigManager.IniRead("SoundSwitchHotKey");
+            _gameModeHotKey = ConfigManager.IniRead("GameModeHotKey");
+            _audioDeviceSwitchHotKey = ConfigManager.IniRead("AudioDeviceSwitchHotKey");
+            _exitAppHotKey = ConfigManager.IniRead("ExitAppHotKey");
+            _audioDevice1 = ConfigManager.IniRead("AudioDeviceNo1");
+            _audioDevice2 = ConfigManager.IniRead("AudioDeviceNo2");
+            _defaultAudioDevice = ConfigManager.IniRead("DefaultAudioDevice");
 
             var sbControlProfileFilePath = Properties.Resources.SBControl_ProfileFilePath;
             var sbControlProfileRegPath = Properties.Resources.SBControl_ProfileRegPath;
@@ -262,40 +286,53 @@ namespace MiToolz
             }
         }
 
+        //show which Audio profile is active
+        private void ShowDefaultAudioDevice()
+        {
+            var defaultAudioDevice = " " + _defaultAudioDevice + " ";
+            var defaultAudioDeviceBadge = AudioDeviceBadge.Badge.ToString();
+
+            if (defaultAudioDeviceBadge != defaultAudioDevice)
+            {
+                AudioDeviceBadge.Badge = " " + _defaultAudioDevice + " ";
+            }
+        }
+
         private void SetupComboListSources()
         {
             //define List sources
-            AppHotKey.ItemsSource = ListManager.HotKey;
-            DefaultProfileList.ItemsSource = ListManager.HotKeyMsiAb;
-            OverclockProfileList.ItemsSource = ListManager.HotKeyMsiAb;
-            SoundSwitchHotKeyModifier.ItemsSource = ListManager.HotKeyModifier;
-            SoundSwitchHotKey.ItemsSource = ListManager.HotKey;
+            GameModeHotKey.ItemsSource = ListManager.HotKey;
+            DefaultProfileList.ItemsSource = ListManager.MsiAbProfileList;
+            OverclockProfileList.ItemsSource = ListManager.MsiAbProfileList;
+            AudioDevice1.ItemsSource = ListManager.AudioDevicesList;
+            AudioDevice2.ItemsSource = ListManager.AudioDevicesList;
+            AudioDeviceHotKey.ItemsSource = ListManager.HotKey;
+            ExitAppHotKey.ItemsSource = ListManager.HotKey;
+
             //show relative list indexes
             SetComboListIndexes();
         }
 
         private void SetComboListIndexes()
         {
-            var hotKeyApp = ListManager.HotKey.FindIndex(a => a.Contains(_appHotKey));
-            AppHotKey.SelectedIndex = hotKeyApp;
-            var hotKeyMsiAbiIndex = ListManager.HotKeyMsiAb.FindIndex(a => a.Contains(_stockProfile));
-            DefaultProfileList.SelectedIndex = hotKeyMsiAbiIndex;
-            var hotKeyMsiAbIndex = ListManager.HotKeyMsiAb.FindIndex(a => a.Contains(_ocProfile));
-            OverclockProfileList.SelectedIndex = hotKeyMsiAbIndex;
-            var hotKeyModifierSoundSwitch = ListManager.HotKeyModifier.FindIndex(a => a.Contains(_soundSwitchHotKeyModifier));
-            SoundSwitchHotKeyModifier.SelectedIndex = hotKeyModifierSoundSwitch;
-            var hotKeySoundSwitch = ListManager.HotKey.FindIndex(a => a.Contains(_soundSwitchHotKey));
-            SoundSwitchHotKey.SelectedIndex = hotKeySoundSwitch;
+            var hotKeyGameMode = ListManager.HotKey.FindIndex(a => a.Contains(_gameModeHotKey));
+            GameModeHotKey.SelectedIndex = hotKeyGameMode;
+            var msiAbStockIndex = ListManager.MsiAbProfileList.FindIndex(a => a.Contains(_stockProfile));
+            DefaultProfileList.SelectedIndex = msiAbStockIndex;
+            var msiAbOcIndex = ListManager.MsiAbProfileList.FindIndex(a => a.Contains(_ocProfile));
+            OverclockProfileList.SelectedIndex = msiAbOcIndex;
+            var audioDeviceSwitcher1 = ListManager.AudioDevicesList.FindIndex(a => a.Contains(_audioDevice1));
+            AudioDevice1.SelectedIndex = audioDeviceSwitcher1;
+            var audioDeviceSwitcher2 = ListManager.AudioDevicesList.FindIndex(a => a.Contains(_audioDevice2));
+            AudioDevice2.SelectedIndex = audioDeviceSwitcher2;
+            var hotKeyAudioSwitcher = ListManager.HotKey.FindIndex(a => a.Contains(_audioDeviceSwitchHotKey));
+            AudioDeviceHotKey.SelectedIndex = hotKeyAudioSwitcher;
+            var hotKeyExitApp = ListManager.HotKey.FindIndex(a => a.Contains(_exitAppHotKey));
+            ExitAppHotKey.SelectedIndex = hotKeyExitApp;
         }
 
         private void StartOhMMonitor()
         {
-            var curCoreClock = "";
-            var curMemClock = "";
-            var curGpuLoad = "";
-            var curMemLoad = "";
-            var curGpuTemp = "";
-            var curGpuPower = "";
             int roundValue;
 
             Task.Factory.StartNew(async () =>
@@ -308,149 +345,204 @@ namespace MiToolz
                     {
                         hardware.Update();
 
-                        if (hardware.HardwareType != HardwareType.GpuNvidia) continue;
-                        foreach (var sensor in hardware.Sensors)
-                        {
-                            switch (sensor.SensorType)
+                        if (hardware.HardwareType == HardwareType.GpuNvidia)
+                            foreach (var sensor in hardware.Sensors)
                             {
-                                case SensorType.Clock:
-                                    {
-                                        if (sensor.Name.Contains("Core"))
+                                switch (sensor.SensorType)
+                                {
+                                    case SensorType.Clock:
                                         {
-                                            if (sensor.Value.Value >= 0)
+                                            if (sensor.Name.Equals("GPU Core"))
                                             {
-                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                                curCoreClock = roundValue + " Mhz";
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _gpuClock = roundValue + " Mhz";
+                                                }
+                                                else
+                                                {
+                                                    _gpuClock = " -no data- ";
+                                                }
                                             }
-                                            else
+                                            if (sensor.Name.Equals("GPU Memory"))
                                             {
-                                                curCoreClock = " -no data- ";
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _gpuMemClock = roundValue + " Mhz";
+                                                }
+                                                else
+                                                {
+                                                    _gpuMemClock = " -no data- ";
+                                                }
                                             }
+                                            break;
                                         }
-
-                                        if (sensor.Name.Contains("Memory"))
+                                    case SensorType.Temperature:
                                         {
-                                            if (sensor.Value.Value >= 0)
+                                            if (sensor.Name.Equals("GPU Core"))
                                             {
-                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                                curMemClock = roundValue + " Mhz";
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _gpuTemp = roundValue + " °C";
+                                                }
+                                                else
+                                                {
+                                                    _gpuTemp = " -no data- ";
+                                                }
                                             }
-                                            else
-                                            {
-                                                curMemClock = " -no data- ";
-                                            }
+                                            break;
                                         }
-
+                                    case SensorType.Load:
+                                        {
+                                            if (sensor.Name.Equals("GPU Core"))
+                                            {
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _gpuLoad = roundValue + " %";
+                                                }
+                                                else
+                                                {
+                                                    _gpuLoad = " -no data- ";
+                                                }
+                                            }
+                                            if (sensor.Name.Equals("GPU Memory"))
+                                            {
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _gpuMemLoad = roundValue + " %";
+                                                }
+                                                else
+                                                {
+                                                    _gpuMemLoad = " -no data- ";
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    case SensorType.Power:
+                                        {
+                                            if (sensor.Name.Equals("GPU Package"))
+                                            {
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _gpuPower = roundValue + " W";
+                                                }
+                                                else
+                                                {
+                                                    _gpuPower = " -no data- ";
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    case SensorType.Voltage:
                                         break;
-                                    }
-                                case SensorType.Temperature:
-                                    {
-                                        if (sensor.Name.Contains("Core"))
-                                        {
-                                            if (sensor.Value.Value >= 0)
-                                            {
-                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                                curGpuTemp = roundValue + " °C";
-                                            }
-                                            else
-                                            {
-                                                curGpuTemp = " -no data- ";
-                                            }
-                                        }
-
+                                    case SensorType.Frequency:
                                         break;
-                                    }
-                                case SensorType.Load:
-                                    {
-                                        if (sensor.Name.Contains("Core"))
-                                        {
-                                            if (sensor.Value.Value >= 0)
-                                            {
-                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                                curGpuLoad = roundValue + " %";
-                                            }
-                                            else
-                                            {
-                                                curGpuLoad = " -no data- ";
-                                            }
-                                        }
-
-                                        if (sensor.Name.Contains("Memory"))
-                                        {
-                                            if (sensor.Value.Value >= 0)
-                                            {
-                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                                curMemLoad = roundValue + " %";
-                                            }
-                                            else
-                                            {
-                                                curMemLoad = " -no data- ";
-                                            }
-                                        }
-
+                                    case SensorType.Fan:
                                         break;
-                                    }
-                                case SensorType.Power:
-                                    {
-                                        if (sensor.Name.Contains("GPU Package"))
-                                        {
-                                            if (sensor.Value.Value >= 0)
-                                            {
-                                                roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
-                                                curGpuPower = roundValue + " W";
-                                            }
-                                            else
-                                            {
-                                                curGpuPower = " -no data- ";
-                                            }
-                                        }
-
+                                    case SensorType.Flow:
                                         break;
-                                    }
-                                case SensorType.Voltage:
-                                    break;
-                                case SensorType.Frequency:
-                                    break;
-                                case SensorType.Fan:
-                                    break;
-                                case SensorType.Flow:
-                                    break;
-                                case SensorType.Control:
-                                    break;
-                                case SensorType.Level:
-                                    break;
-                                case SensorType.Factor:
-                                    break;
-                                case SensorType.Data:
-                                    break;
-                                case SensorType.SmallData:
-                                    break;
-                                case SensorType.Throughput:
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
+                                    case SensorType.Control:
+                                        break;
+                                    case SensorType.Level:
+                                        break;
+                                    case SensorType.Factor:
+                                        break;
+                                    case SensorType.Data:
+                                        break;
+                                    case SensorType.SmallData:
+                                        break;
+                                    case SensorType.Throughput:
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
                             }
-                        }
 
-                        var clock = curCoreClock;
-                        var memClock = curMemClock;
-                        var load = curGpuLoad;
-                        var memLoad = curMemLoad;
-                        var temp = curGpuTemp;
-                        var power = curGpuPower;
-
-                        Dispatcher.Invoke(() =>
-                        {
-                            //set corresponding Tile Elements with GPU data values
-                            CoreSpeed.Text = clock;
-                            MemSpeed.Text = memClock;
-                            CoreLoad.Text = load;
-                            MemLoad.Text = memLoad;
-                            CoreTemp.Text = temp;
-                            TotalPower.Text = power;
-                        });
+                        else if (hardware.HardwareType == HardwareType.Cpu)
+                            foreach (var sensor in hardware.Sensors)
+                            {
+                                switch (sensor.SensorType)
+                                {
+                                    case SensorType.Clock:
+                                        {
+                                            if (sensor.Name.Equals("CPU Core #1"))
+                                            {
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _cpuClock = roundValue + " Mhz";
+                                                }
+                                                else
+                                                {
+                                                    _cpuClock = " -no data- ";
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    case SensorType.Temperature:
+                                        {
+                                            if (sensor.Name.Equals("CPU Core #1"))
+                                            {
+                                                if (sensor.Value.Value >= 0)
+                                                {
+                                                    roundValue = (int)Math.Round(sensor.Value.GetValueOrDefault());
+                                                    _cpuTemp = roundValue + " °C";
+                                                }
+                                                else
+                                                {
+                                                    _cpuTemp = " -no data- ";
+                                                }
+                                            }
+                                            break;
+                                        }
+                                    case SensorType.Voltage:
+                                        break;
+                                    case SensorType.Load:
+                                        break;
+                                    case SensorType.Frequency:
+                                        break;
+                                    case SensorType.Fan:
+                                        break;
+                                    case SensorType.Flow:
+                                        break;
+                                    case SensorType.Control:
+                                        break;
+                                    case SensorType.Level:
+                                        break;
+                                    case SensorType.Factor:
+                                        break;
+                                    case SensorType.Power:
+                                        break;
+                                    case SensorType.Data:
+                                        break;
+                                    case SensorType.SmallData:
+                                        break;
+                                    case SensorType.Throughput:
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+                            }
                     }
-                    await Task.Delay(DelayShort);
+                    await Task.Delay(DelayLong);
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        //set corresponding Tile Elements with GPU data values
+                        CoreSpeed.Text = _gpuClock;
+                        MemSpeed.Text = _gpuMemClock;
+                        CoreLoad.Text = _gpuLoad;
+                        MemLoad.Text = _gpuMemLoad;
+                        CoreTemp.Text = _gpuTemp;
+                        TotalPower.Text = _gpuPower;
+                        CpuSpeed.Text = _cpuClock;
+                        CpuTemp.Text = _cpuTemp;
+                    });
                 }
             });
         }
@@ -546,6 +638,7 @@ namespace MiToolz
             {
                 StartInfo = new ProcessStartInfo
                 {
+                    CreateNoWindow = true,
                     FileName = "powercfg",
                     Arguments = "/s " + powerPlan
                 }
@@ -561,18 +654,39 @@ namespace MiToolz
             {
                 StartInfo = new ProcessStartInfo
                 {
+                    CreateNoWindow = true,
                     FileName = _msiabFile
                 }
             };
             msiabProcess.Start();
         }
 
-        // use SendKeys to switch current audio output device using SoundSwitch
-        private void SoundSwitchTile_OnClick(object sender, RoutedEventArgs e)
+        //switch default audio device
+        private void AudioDeviceSwitchTile_OnClick(object sender, RoutedEventArgs e)
         {
-            var keyPressModifier = _soundSwitchHotKeyModifier;
-            var keyPress = _soundSwitchHotKey;
-            KeyManager.HotKeySender(keyPressModifier, keyPress);
+            var device = "";
+            if (_defaultAudioDevice == _audioDevice1)
+            {
+                device = _audioDevice2;
+                ConfigManager.IniWrite("DefaultAudioDevice", _audioDevice2);
+            }
+            if (_defaultAudioDevice == _audioDevice2)
+            {
+                device = _audioDevice1;
+                ConfigManager.IniWrite("DefaultAudioDevice", _audioDevice1);
+            }
+
+            // set default audio output device
+            var setDefaultAudioDevice = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    CreateNoWindow = true,
+                    FileName = "nircmdc.exe",
+                    Arguments = " setdefaultsounddevice " + "\"" + device + "\""
+                }
+            };
+            setDefaultAudioDevice.Start();
         }
 
         private void ToggleSwitch_EnableMonitor(object sender, RoutedEventArgs e)
@@ -648,6 +762,12 @@ namespace MiToolz
                         mainTiles.IsEnabled = true;
 
                     }
+                    CpuMonitorLabel.Visibility = Visibility.Visible;
+                    GpuMonitorLabel.Visibility = Visibility.Visible;
+                    LabelSeperator1.Visibility = Visibility.Visible;
+                    LabelSeperator2.Visibility = Visibility.Visible;
+                    LabelSeperator3.Visibility = Visibility.Visible;
+                    LabelSeperator4.Visibility = Visibility.Visible;
                     SettingsDialog.Visibility = Visibility.Collapsed;
                     SettingsButton.Content = "Settings ";
                     break;
@@ -661,6 +781,13 @@ namespace MiToolz
                         mainTiles.IsEnabled = false;
 
                     }
+
+                    CpuMonitorLabel.Visibility = Visibility.Collapsed;
+                    GpuMonitorLabel.Visibility = Visibility.Collapsed;
+                    LabelSeperator1.Visibility = Visibility.Collapsed;
+                    LabelSeperator2.Visibility = Visibility.Collapsed;
+                    LabelSeperator3.Visibility = Visibility.Collapsed;
+                    LabelSeperator4.Visibility = Visibility.Collapsed;
                     SettingsDialog.Visibility = Visibility.Visible;
                     break;
                 case Visibility.Hidden:
@@ -763,33 +890,79 @@ namespace MiToolz
             ConfigManager.IniWrite("OCProfile", overclockProfileListValue);
         }
 
-        private void SoundSwitchHotKeyModifier_OnSelectionChanged(object sender, RoutedEventArgs e)
+        private void AudioDevice1_OnSelectionChanged(object sender, RoutedEventArgs e)
         {
-            var soundSwitchHotKeyModifierValue = SoundSwitchHotKeyModifier.SelectedValue.ToString();
-            ConfigManager.IniWrite("SoundSwitchHotKeyModifier", soundSwitchHotKeyModifierValue);
+            var audioDeviceSwitch1 = AudioDevice1.SelectedValue.ToString();
+            ConfigManager.IniWrite("AudioDeviceNo1", audioDeviceSwitch1);
         }
 
-        private void SoundSwitchHotKey_OnSelectionChanged(object sender, RoutedEventArgs e)
+        private void AudioDevice2_OnSelectionChanged(object sender, RoutedEventArgs e)
         {
-            var soundSwitchHotKeyValue = SoundSwitchHotKey.SelectedValue.ToString();
-            ConfigManager.IniWrite("SoundSwitchHotKey", soundSwitchHotKeyValue);
+            var audioDeviceSwitch2 = AudioDevice2.SelectedValue.ToString();
+            ConfigManager.IniWrite("AudioDeviceNo2", audioDeviceSwitch2);
         }
 
-        private void AppHotKey_OnSelectionChanged(object sender, RoutedEventArgs e)
+        private void GameModeHotKey_OnSelectionChanged(object sender, RoutedEventArgs e)
         {
-            var appHotKeyValue = AppHotKey.SelectedValue.ToString();
-            ConfigManager.IniWrite("AppHotKey", appHotKeyValue);
+            var gameModeHotKeyValue = GameModeHotKey.SelectedValue.ToString();
+            if (gameModeHotKeyValue != _audioDeviceSwitchHotKey && gameModeHotKeyValue != _exitAppHotKey)
+            {
+                ConfigManager.IniWrite("GameModeHotKey", gameModeHotKeyValue);
+            }
+            else
+            {
+                var metroWindow = (Application.Current.MainWindow as MetroWindow);
+                metroWindow.ShowMessageAsync("HotKey already assigned...", "Choose another HotKey for this task");
+            }
         }
 
-        private void AiOHotKey(object sender, KeyEventArgs e)
+        private void AudioDeviceHotKey_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var audioDeviceHotKeyValue = AudioDeviceHotKey.SelectedValue.ToString();
+
+            if (audioDeviceHotKeyValue != _gameModeHotKey && audioDeviceHotKeyValue != _exitAppHotKey)
+            {
+                ConfigManager.IniWrite("AudioDeviceSwitchHotKey", audioDeviceHotKeyValue);
+            }
+            else
+            {
+                var metroWindow = (Application.Current.MainWindow as MetroWindow);
+                metroWindow.ShowMessageAsync("HotKey already assigned...", "Choose another HotKey for this task");
+            }
+        }
+
+        private void ExitAppHotKey_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var exitAppHotKeyValue = ExitAppHotKey.SelectedValue.ToString();
+
+            if (exitAppHotKeyValue != _gameModeHotKey && exitAppHotKeyValue != _audioDeviceSwitchHotKey)
+            {
+                ConfigManager.IniWrite("ExitAppHotKey", exitAppHotKeyValue);
+            }
+            else
+            {
+                var metroWindow = (Application.Current.MainWindow as MetroWindow);
+                metroWindow.ShowMessageAsync("HotKey already assigned...", "Choose another HotKey for this task");
+            }
+        }
+
+        private void HotKeyManager(object sender, KeyEventArgs e)
         {
             var keyPress = e.Key.ToString();
 
-            if (keyPress.Contains(_soundSwitchHotKeyModifier) || keyPress.Contains(_soundSwitchHotKey)) return;
-            if (!keyPress.Contains(_appHotKey)) return;
-
-            GpuTile_OnClick(sender, e);
-            PowerPlanTile_OnCLick(sender, e);
+            if (keyPress.Equals(_gameModeHotKey))
+            {
+                GpuTile_OnClick(sender, e);
+                PowerPlanTile_OnCLick(sender, e);
+            }
+            if (keyPress.Equals(_audioDeviceSwitchHotKey))
+            {
+                AudioDeviceSwitchTile_OnClick(sender, e);
+            }
+            if (keyPress.Equals(_exitAppHotKey))
+            {
+                MainWindow_Closed(sender, e);
+            }
         }
 
         //reflect updated settings in UI when window is re-focused
@@ -799,6 +972,7 @@ namespace MiToolz
             ShowActiveAudioProfile();
             ShowActiveGpuProfile();
             ShowActivePowerPlan();
+            ShowDefaultAudioDevice();
             SetComboListIndexes();
             // kill SoundBlaster Control Panel if running when app is refocused
             TerminateApp("SBAdgyFx");

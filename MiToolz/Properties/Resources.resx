@@ -121,11 +121,17 @@
   <data name="App_Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\App_Icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="DefaultAppHotKey" xml:space="preserve">
-    <value>M</value>
-  </data>
   <data name="DefaultAppTheme" xml:space="preserve">
     <value>Dark.Blue</value>
+  </data>
+  <data name="DefaultAudioDeviceSwitchHotKey" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="DefaultExitAppHotkey" xml:space="preserve">
+    <value>Q</value>
+  </data>
+  <data name="DefaultGameModeHotKey" xml:space="preserve">
+    <value>G</value>
   </data>
   <data name="DefaultMonitoringEnabled" xml:space="preserve">
     <value>1</value>
@@ -133,35 +139,23 @@
   <data name="DefaultOCProfile" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="DefaultSoundSwitchHotKey" xml:space="preserve">
-    <value>F9</value>
-  </data>
-  <data name="DefaultSoundSwitchHotKeyModifier" xml:space="preserve">
-    <value>Ctrl</value>
-  </data>
   <data name="DefaultStockProfile" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="Image_Audio" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Image_Audio.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Image_DeviceSwitcher" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Image_DeviceSwitcher.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Image_GPU" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Image_GPU.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Image_MenuExpand" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Image_MenuExpand.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Image_MenuRetract" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Image_MenuRetract.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Image_MSIab" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Image_MSIab.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Image_PowerPlan" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Image_PowerPlan.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Image_SaveIni" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Image_SaveIni.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Image_SoundSwitch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Image_SoundSwitch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
