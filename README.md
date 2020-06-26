@@ -7,9 +7,9 @@ Personal Nvidia GPU &amp; Creative SoundBlaster Audio QuickTool with built-in re
 
 ## Framework & library dependencies >
 MahApps.Metro > https://github.com/MahApps/MahApps.Metro  
-LibreHardwareMonitorLib > https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
-NAudio > https://github.com/naudio/NAudio
-NirCmd > https://www.nirsoft.net/utils/nircmd.html
+LibreHardwareMonitorLib > https://github.com/LibreHardwareMonitor/LibreHardwareMonitor  
+NAudio > https://github.com/naudio/NAudio  
+NirCmd > https://www.nirsoft.net/utils/nircmd.html  
 
 
 ## Notes >
