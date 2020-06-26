@@ -13,7 +13,8 @@ NirCmd > https://www.nirsoft.net/utils/nircmd.html
 
 
 ## Notes >
- Changing GPU Profiles will need the 'MSI-Afterburner' application to be installed (https://www.guru3d.com/files-details/msi-afterburner-beta-download.html) (doesn't need to be running. MiToolz will send the selected profile to MSI-Afterburner and then close it immediately)
+ Changing GPU Profiles will need the 'MSI-Afterburner' application to be installed (https://www.guru3d.com/files-details/msi-afterburner-beta-download.html)  
+  (doesn't need to be running. MiToolz will send the selected profile to MSI-Afterburner and then close it immediately)
 
 
 ## Planned >
