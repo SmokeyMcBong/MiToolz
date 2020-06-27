@@ -189,7 +189,7 @@
                   Title="Core Temp"
                   TitleFontSize="13"
                   HorizontalTitleAlignment="Right"
-                  Margin="121,259,0,0"
+                  Margin="121,260,0,0"
                   Height="65"
                   Width="106"
                   VerticalAlignment="Top"
@@ -507,7 +507,7 @@
                     <Border BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                             BorderThickness="1"
                             HorizontalAlignment="Left"
-                            Height="100"
+                            Height="101"
                             VerticalAlignment="Top"
                             Width="226"
                             Margin="162,121,0,0">
@@ -703,7 +703,7 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <Separator x:Name="LabelSeperator1"
+        <Separator x:Name="LabelSeparator1"
                    HorizontalAlignment="Left"
                    Height="40"
                    Margin="-152,168,0,0"
@@ -719,7 +719,7 @@
                 </TransformGroup>
             </Separator.RenderTransform>
         </Separator>
-        <Separator x:Name="LabelSeperator3"
+        <Separator x:Name="LabelSeparator3"
                    HorizontalAlignment="Left"
                    Height="40"
                    Margin="-15,238,0,0"
@@ -735,7 +735,7 @@
                 </TransformGroup>
             </Separator.RenderTransform>
         </Separator>
-        <Separator x:Name="LabelSeperator2"
+        <Separator x:Name="LabelSeparator2"
                    HorizontalAlignment="Left"
                    Height="40"
                    Margin="-15,31,0,0"
@@ -751,7 +751,7 @@
                 </TransformGroup>
             </Separator.RenderTransform>
         </Separator>
-        <Separator x:Name="LabelSeperator4"
+        <Separator x:Name="LabelSeparator4"
                    HorizontalAlignment="Left"
                    Height="40"
                    Margin="-15,306,0,0"

@@ -764,10 +764,10 @@ namespace MiToolz
                     }
                     CpuMonitorLabel.Visibility = Visibility.Visible;
                     GpuMonitorLabel.Visibility = Visibility.Visible;
-                    LabelSeperator1.Visibility = Visibility.Visible;
-                    LabelSeperator2.Visibility = Visibility.Visible;
-                    LabelSeperator3.Visibility = Visibility.Visible;
-                    LabelSeperator4.Visibility = Visibility.Visible;
+                    LabelSeparator1.Visibility = Visibility.Visible;
+                    LabelSeparator2.Visibility = Visibility.Visible;
+                    LabelSeparator3.Visibility = Visibility.Visible;
+                    LabelSeparator4.Visibility = Visibility.Visible;
                     SettingsDialog.Visibility = Visibility.Collapsed;
                     SettingsButton.Content = "Settings ";
                     break;
@@ -784,10 +784,10 @@ namespace MiToolz
 
                     CpuMonitorLabel.Visibility = Visibility.Collapsed;
                     GpuMonitorLabel.Visibility = Visibility.Collapsed;
-                    LabelSeperator1.Visibility = Visibility.Collapsed;
-                    LabelSeperator2.Visibility = Visibility.Collapsed;
-                    LabelSeperator3.Visibility = Visibility.Collapsed;
-                    LabelSeperator4.Visibility = Visibility.Collapsed;
+                    LabelSeparator1.Visibility = Visibility.Collapsed;
+                    LabelSeparator2.Visibility = Visibility.Collapsed;
+                    LabelSeparator3.Visibility = Visibility.Collapsed;
+                    LabelSeparator4.Visibility = Visibility.Collapsed;
                     SettingsDialog.Visibility = Visibility.Visible;
                     break;
                 case Visibility.Hidden:
