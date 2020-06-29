@@ -332,8 +332,9 @@
             <Image VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                        Source="pack://siteoforigin:,,,/Resources/Image_TimerResolution.png"
-                       Width="119"
-                   Height="71" />
+                       Width="90"
+                       Height="74"
+                       Margin="0,2,0,0" />
             </mah:Badged>
         </mah:Tile>
         <mah:Tile x:Name="AudioDeviceSwitchTile"
