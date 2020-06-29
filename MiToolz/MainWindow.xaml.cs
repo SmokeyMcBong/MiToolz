@@ -46,14 +46,18 @@ namespace MiToolz
         private string _gpuPower;
         private string _cpuClock;
         private string _cpuTemp;
-        //private const int DelayShort = 500;
-        private const int DelayLong = 1000;
+        private string _timerResolution;
+        private const int Delay = 1000;
 
         public MainWindow()
         {
             //ignore Theme ResourceDictionary before initialize as setting whichever theme (_appTheme) saved in .ini
             Application.Current.Resources.MergedDictionaries.RemoveAt(0);
             InitializeComponent();
+
+            //add MainWindow event handlers
+            Closed += MainWindow_Closed;
+            Activated += MainWindow_Activated;
 
             //run startup checks, read all config settings and set corresponding UI elements
             StartupSetup();
@@ -64,9 +68,8 @@ namespace MiToolz
             ShowDefaultAudioDevice();
             SetupComboListSources();
 
-            //add MainWindow event handlers
-            Closed += MainWindow_Closed;
-            Activated += MainWindow_Activated;
+            //start Timer Resolution Monitoring
+            StartTimerMonitor();
 
             //start OhM Monitoring
             _thisPc = new Computer
@@ -74,7 +77,6 @@ namespace MiToolz
                 IsGpuEnabled = true,
                 IsCpuEnabled = true
             };
-
             IsMonitorEnabled();
         }
 
@@ -331,6 +333,25 @@ namespace MiToolz
             ExitAppHotKey.SelectedIndex = hotKeyExitApp;
         }
 
+        private void StartTimerMonitor()
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                while (true)
+                {
+                    _timerResolution = "Current Timer: " + ServiceManager.CurrentTimerRes() / 10000.0 + "ms";
+                    Dispatcher.Invoke(() =>
+                    {
+                        if (TimerResolutionTileBadge.Badge.ToString() != _timerResolution)
+                        {
+                            TimerResolutionTileBadge.Badge = _timerResolution;
+                        }
+                    });
+                    await Task.Delay(Delay);
+                }
+            });
+        }
+
         private void StartOhMMonitor()
         {
             int roundValue;
@@ -529,7 +550,7 @@ namespace MiToolz
                                 }
                             }
                     }
-                    await Task.Delay(DelayLong);
+                    await Task.Delay(Delay);
 
                     Dispatcher.Invoke(() =>
                     {
@@ -592,7 +613,7 @@ namespace MiToolz
 
             Task.Factory.StartNew(async () =>
             {
-                await Task.Delay(DelayLong);
+                await Task.Delay(Delay);
 
                 //after setting the profile terminate MSIAfterburner process
                 TerminateApp("MSIAfterburner");
@@ -682,7 +703,7 @@ namespace MiToolz
                 StartInfo = new ProcessStartInfo
                 {
                     CreateNoWindow = true,
-                    FileName = "nircmdc.exe",
+                    FileName = @"bin\nircmdc.exe",
                     Arguments = " setdefaultsounddevice " + "\"" + device + "\""
                 }
             };
@@ -750,6 +771,20 @@ namespace MiToolz
             }
         }
 
+        private void TimerResolutionTile_OnClick(object sender, RoutedEventArgs e)
+        {
+            ServiceManager.MiToolzService.Refresh();
+            if (!ServiceManager.ServiceExists())
+            {
+                var metroWindow = (Application.Current.MainWindow as MetroWindow);
+                metroWindow.ShowMessageAsync("Service Not Found..", "To change this, Install the Timer Resolution Service via Settings Panel");
+            }
+            else
+            {
+                ServiceManager.StartStopService();
+            }
+        }
+
         private void Settings(object sender, RoutedEventArgs e)
         {
             switch (SettingsDialog.Visibility)
@@ -768,6 +803,7 @@ namespace MiToolz
                     LabelSeparator2.Visibility = Visibility.Visible;
                     LabelSeparator3.Visibility = Visibility.Visible;
                     LabelSeparator4.Visibility = Visibility.Visible;
+                    TimerResolutionTile.IsEnabled = true;
                     SettingsDialog.Visibility = Visibility.Collapsed;
                     SettingsButton.Content = "Settings ";
                     break;
@@ -782,12 +818,25 @@ namespace MiToolz
 
                     }
 
+                    if (ServiceManager.ServiceExists())
+                    {
+                        InstallServiceButton.IsEnabled = false;
+                        UninstallServiceButton.IsEnabled = true;
+                    }
+
+                    else
+                    {
+                        InstallServiceButton.IsEnabled = true;
+                        UninstallServiceButton.IsEnabled = false;
+                    }
+
                     CpuMonitorLabel.Visibility = Visibility.Collapsed;
                     GpuMonitorLabel.Visibility = Visibility.Collapsed;
                     LabelSeparator1.Visibility = Visibility.Collapsed;
                     LabelSeparator2.Visibility = Visibility.Collapsed;
                     LabelSeparator3.Visibility = Visibility.Collapsed;
                     LabelSeparator4.Visibility = Visibility.Collapsed;
+                    TimerResolutionTile.IsEnabled = false;
                     SettingsDialog.Visibility = Visibility.Visible;
                     break;
                 case Visibility.Hidden:
@@ -927,7 +976,7 @@ namespace MiToolz
             else
             {
                 var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                metroWindow.ShowMessageAsync("HotKey already assigned...", "Choose another HotKey for this task");
+                metroWindow.ShowMessageAsync("HotKey already assigned..", "Choose another HotKey for this task");
             }
         }
 
@@ -942,7 +991,7 @@ namespace MiToolz
             else
             {
                 var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                metroWindow.ShowMessageAsync("HotKey already assigned...", "Choose another HotKey for this task");
+                metroWindow.ShowMessageAsync("HotKey already assigned..", "Choose another HotKey for this task");
             }
         }
 
@@ -963,6 +1012,22 @@ namespace MiToolz
             {
                 MainWindow_Closed(sender, e);
             }
+        }
+
+        private void InstallServiceButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ServiceManager.MiToolzService.Refresh();
+            ServiceManager.InstallService();
+            InstallServiceButton.IsEnabled = false;
+            UninstallServiceButton.IsEnabled = true;
+        }
+
+        private void UninstallServiceButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            ServiceManager.MiToolzService.Refresh();
+            ServiceManager.UninstallService();
+            InstallServiceButton.IsEnabled = true;
+            UninstallServiceButton.IsEnabled = false;
         }
 
         //reflect updated settings in UI when window is re-focused

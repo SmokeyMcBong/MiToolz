@@ -50,7 +50,7 @@ namespace MiToolz
                     _mw.GpuTile,
                     _mw.PowerPlanTile,
                     _mw.AudioTile,
-                    _mw.MsIabTile,
+                    _mw.TimerResolutionTile,
                     _mw.AudioDeviceSwitchTile
                 };
                 return controlsMainTiles;

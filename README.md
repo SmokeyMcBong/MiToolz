@@ -18,9 +18,9 @@ NirCmd > https://www.nirsoft.net/utils/nircmd.html
 
 
 ## Planned >
-1. ~~Add ability to switch audio output devices from within MiToolz itself~~  >> Completed.
-2. Implement universal audio equalizer to remove reliance of proprietary audio software ie, Creative SoundBlaster control panel etc
-3. Add option (service) for changing the Windows Timer Resolution setting, ie 1ms or 0.5ms etc
+1. ~~Add ability to switch audio output devices from within MiToolz itself~~  >> Completed.  
+2. ~~Add option (service) for changing the Windows Timer Resolution setting, ie 1ms or 0.5ms etc~~  >> Completed.  
+3. Implement universal audio equalizer to remove reliance of proprietary audio software ie, Creative SoundBlaster control panel etc  
 
 
 ## Screens >

@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiToolz", "MiToolz\MiToolz.csproj", "{09405820-5162-4AFE-882B-7052CF1381F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiToolzTimerService", "MiToolzTimerService\MiToolzTimerService.csproj", "{58E4EF47-30A1-4292-9EBB-9B8EC045CBBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{09405820-5162-4AFE-882B-7052CF1381F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09405820-5162-4AFE-882B-7052CF1381F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09405820-5162-4AFE-882B-7052CF1381F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58E4EF47-30A1-4292-9EBB-9B8EC045CBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58E4EF47-30A1-4292-9EBB-9B8EC045CBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58E4EF47-30A1-4292-9EBB-9B8EC045CBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58E4EF47-30A1-4292-9EBB-9B8EC045CBBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

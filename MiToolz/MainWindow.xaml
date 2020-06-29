@@ -309,9 +309,9 @@
                        Height="130" />
             </mah:Badged>
         </mah:Tile>
-        <mah:Tile x:Name="MsIabTile"
-                  Click="MsIabTile_OnClick"
-                  Title="Open MSIAfterburner"
+        <mah:Tile x:Name="TimerResolutionTile"
+                  Click="TimerResolutionTile_OnClick"
+                  Title="Windows Timer Resolution"
                   TitleFontSize="14"
                   HorizontalTitleAlignment="Right"
                   Margin="267,217,0,0"
@@ -323,11 +323,18 @@
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
                   IsTabStop="False">
+            <mah:Badged x:Name="TimerResolutionTileBadge"
+                        Badge=""
+                        BadgeForeground="Black"
+                        BadgePlacementMode="Top"
+                        BadgeBackground="DarkGray"
+                        Height="76">
             <Image VerticalAlignment="Center"
                    HorizontalAlignment="Center"
-                   Source="pack://siteoforigin:,,,/Resources/Image_MSIab.png"
-                   Width="119"
+                       Source="pack://siteoforigin:,,,/Resources/Image_TimerResolution.png"
+                       Width="119"
                    Height="71" />
+            </mah:Badged>
         </mah:Tile>
         <mah:Tile x:Name="AudioDeviceSwitchTile"
                   Click="AudioDeviceSwitchTile_OnClick"
@@ -352,8 +359,8 @@
                 <Image VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Source="pack://siteoforigin:,,,/Resources/Image_DeviceSwitcher.png"
-                       Width="68"
-                       Height="62" />
+                       Width="74"
+                       Height="76" />
             </mah:Badged>
         </mah:Tile>
 
@@ -512,25 +519,13 @@
                             Width="226"
                             Margin="162,121,0,0">
                         <TextBlock TextWrapping="Wrap"
-                                   Text="About MiToolz"
+                                   Text="Timer Resolution Service"
                                    TextAlignment="Center"
                                    Background="{DynamicResource MahApps.Brushes.Accent}"
                                    Margin="0,-1,-1,0"
                                    Height="16"
                                    VerticalAlignment="Top" />
                     </Border>
-                    <Image Height="43"
-                           VerticalAlignment="Top"
-                           Margin="162,146,296,0"
-                           Source="pack://siteoforigin:,,,/Resources/App_Icon.ico"
-                           Cursor="Help"
-                           ToolTip="Build Date : 26-06-2020" />
-                    <TextBlock TextWrapping="Wrap"
-                               Text="MiToolz v3.2.0"
-                               TextAlignment="Center"
-                               VerticalAlignment="Top"
-                               Margin="165,194,296,0"
-                               Height="16" />
                     <TextBlock HorizontalAlignment="Left"
                                TextWrapping="Wrap"
                                Text="Default
@@ -665,6 +660,22 @@
                               Cursor="Hand"
                               Margin="600,184,0,0"
                               IsTabStop="False" />
+                    <Button x:Name="InstallServiceButton"
+                            Content="Install Service"
+                            Click="InstallServiceButton_OnClick"
+                            Cursor="Hand"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="110"
+                            Margin="225,149,0,0" />
+                    <Button x:Name="UninstallServiceButton"
+                            Content="Uninstall Service"
+                            Click="UninstallServiceButton_OnClick"
+                            Cursor="Hand"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Width="110"
+                            Margin="225,183,0,0" />
                 </Grid>
             </mah:CustomDialog>
         </Grid>
@@ -767,6 +778,5 @@
                 </TransformGroup>
             </Separator.RenderTransform>
         </Separator>
-
     </Grid>
 </mah:MetroWindow>

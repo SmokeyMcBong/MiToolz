@@ -16,9 +16,9 @@
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             <system:String x:Key="VersionNo"
-                           xml:space="preserve">  MiToolz  v3.0.0  </system:String>
+                           xml:space="preserve">  MiToolz  v3.5.0  </system:String>
             <system:String x:Key="VersionDate"
-                           xml:space="preserve">  Build Date : 03-06-2020  </system:String>
+                           xml:space="preserve">  Build Date : 29-06-2020  </system:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
