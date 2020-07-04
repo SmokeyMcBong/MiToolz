@@ -1001,8 +1001,19 @@ namespace MiToolz
 
             if (keyPress.Equals(_gameModeHotKey))
             {
-                GpuTile_OnClick(sender, e);
-                PowerPlanTile_OnCLick(sender, e);
+                switch (PowerPlanBadge.Badge.ToString())
+                {
+                    case " Performance " when GpuProfileBadge.Badge.ToString() == " Default ":
+                        GpuTile_OnClick(sender, e);
+                        break;
+                    case " Balanced " when GpuProfileBadge.Badge.ToString() == " Overclock ":
+                        PowerPlanTile_OnCLick(sender, e);
+                        break;
+                    default:
+                        GpuTile_OnClick(sender, e);
+                        PowerPlanTile_OnCLick(sender, e);
+                        break;
+                }
             }
             if (keyPress.Equals(_audioDeviceSwitchHotKey))
             {
