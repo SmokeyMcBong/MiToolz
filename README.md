@@ -2,7 +2,7 @@
 
 
 ## About >
-Personal Nvidia GPU &amp; Creative SoundBlaster Audio QuickTool with built-in real-time monitoring
+Personal Nvidia GPU &amp; Audio QuickTool with built-in real-time monitoring
 
 
 ## Framework & library dependencies >
@@ -17,11 +17,20 @@ NirCmd > https://www.nirsoft.net/utils/nircmd.html
   (doesn't need to be running. MiToolz will send the selected profile to MSI-Afterburner and then close it immediately)
 
 
-## Planned >
-1. ~~Add ability to switch audio output devices from within MiToolz itself~~  >> Completed.  
-2. ~~Add option (service) for changing the Windows Timer Resolution setting, ie 1ms or 0.5ms etc~~  >> Completed.  
-3. Implement universal audio equalizer to remove reliance of proprietary audio software ie, Creative SoundBlaster control panel etc  
-
+## Features >
+1. Ability to change MSI Afterburner Profiles on the fly  
+2. Option to change the Windows Power Plan between 'Balanced' and 'High Performance' Profiles  
+3. Swap between different Windows Audio Output Devices  
+4. Ability to switch between the default Windows Timer Resolution value and 0.5ms Timer Resolution (using new built in service   which can be installed/uninstalled at any time within the settings panel)  
+5. Realtime System monitoring of the following data ..  
+  - GPU Core Speed
+  - GPU Memory Speed
+  - GPU Core Load %
+  - GPU Memory Load %
+  - GPU Total Power Usage watts
+  - GPU Core Temperature
+  - CPU Core Speed
+  - CPU Core Temperature
 
 ## Screens >
 

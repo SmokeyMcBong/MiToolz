@@ -166,16 +166,7 @@
   <data name="PowerPlanBalanced" xml:space="preserve">
     <value>381b4222-f694-41f0-9685-ff5bb260df2e</value>
   </data>
-  <data name="PowerPlanPerformance" xml:space="preserve">
+  <data name="PowerPlanHighPerformance" xml:space="preserve">
     <value>8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c</value>
-  </data>
-  <data name="SBControl_FilePath" xml:space="preserve">
-    <value>C:\Program Files (x86)\Creative\Sound Blaster Audigy Fx\Sound Blaster Audigy Fx Control Panel\SBAdgyFx.exe</value>
-  </data>
-  <data name="SBControl_ProfileFilePath" xml:space="preserve">
-    <value>AppData\Local\Creative\Sound Blaster Audigy Fx Control Panel\profile\</value>
-  </data>
-  <data name="SBControl_ProfileRegPath" xml:space="preserve">
-    <value>Software\Creative Tech\Sound Blaster Audigy Fx Control Panel\Settings\</value>
   </data>
 </root>

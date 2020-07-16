@@ -213,36 +213,9 @@ namespace MiToolz.Properties {
         /// <summary>
         ///   Looks up a localized string similar to 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c.
         /// </summary>
-        internal static string PowerPlanPerformance {
+        internal static string PowerPlanHighPerformance {
             get {
-                return ResourceManager.GetString("PowerPlanPerformance", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to C:\Program Files (x86)\Creative\Sound Blaster Audigy Fx\Sound Blaster Audigy Fx Control Panel\SBAdgyFx.exe.
-        /// </summary>
-        internal static string SBControl_FilePath {
-            get {
-                return ResourceManager.GetString("SBControl_FilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to AppData\Local\Creative\Sound Blaster Audigy Fx Control Panel\profile\.
-        /// </summary>
-        internal static string SBControl_ProfileFilePath {
-            get {
-                return ResourceManager.GetString("SBControl_ProfileFilePath", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Software\Creative Tech\Sound Blaster Audigy Fx Control Panel\Settings\.
-        /// </summary>
-        internal static string SBControl_ProfileRegPath {
-            get {
-                return ResourceManager.GetString("SBControl_ProfileRegPath", resourceCulture);
+                return ResourceManager.GetString("PowerPlanHighPerformance", resourceCulture);
             }
         }
     }

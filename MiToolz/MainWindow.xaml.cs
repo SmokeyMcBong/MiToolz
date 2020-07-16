@@ -28,7 +28,6 @@ namespace MiToolz
         private static string _powerPlanBalanced;
         private static string _powerPlanPerformance;
         private static string _sbControlFile;
-        private static string _sbControlActiveProfile;
         private static string _msiabFile;
         private static string _isMonitoringEnabled;
         private static string _appTheme;
@@ -62,7 +61,6 @@ namespace MiToolz
             //run startup checks, read all config settings and set corresponding UI elements
             StartupSetup();
             SetAppTheme();
-            ShowActiveAudioProfile();
             ShowActiveGpuProfile();
             ShowActivePowerPlan();
             ShowDefaultAudioDevice();
@@ -91,12 +89,11 @@ namespace MiToolz
 
             //check for ini file, if not found then create new file and write default values to it
             var myConfigManager = Properties.Resources.MyConfigManager;
-            var sbControlFilePath = Properties.Resources.SBControl_FilePath;
             var msiabFilePath = Properties.Resources.MSIAB_FilePath;
             var defaultStockProfile = Properties.Resources.DefaultStockProfile;
             var defaultOcProfile = Properties.Resources.DefaultOCProfile;
             var powerPlanBalanced = Properties.Resources.PowerPlanBalanced;
-            var powerPlanPerformance = Properties.Resources.PowerPlanPerformance;
+            var powerPlanPerformance = Properties.Resources.PowerPlanHighPerformance;
             var defaultMonitoringEnabled = Properties.Resources.DefaultMonitoringEnabled;
             var defaultAppTheme = Properties.Resources.DefaultAppTheme;
             var defaultGameModeHotKey = Properties.Resources.DefaultGameModeHotKey;
@@ -112,7 +109,6 @@ namespace MiToolz
                 ConfigManager.IniWrite("OCProfile", defaultOcProfile);
                 ConfigManager.IniWrite("PowerPlanBalanced", powerPlanBalanced);
                 ConfigManager.IniWrite("PowerPlanPerformance", powerPlanPerformance);
-                ConfigManager.IniWrite("SBControl_File", sbControlFilePath);
                 ConfigManager.IniWrite("MSIAB_File", msiabFilePath);
                 ConfigManager.IniWrite("IsMonitoringEnabled", defaultMonitoringEnabled);
                 ConfigManager.IniWrite("AppTheme", defaultAppTheme);
@@ -147,27 +143,6 @@ namespace MiToolz
             _audioDevice1 = ConfigManager.IniRead("AudioDeviceNo1");
             _audioDevice2 = ConfigManager.IniRead("AudioDeviceNo2");
             _defaultAudioDevice = ConfigManager.IniRead("DefaultAudioDevice");
-
-            var sbControlProfileFilePath = Properties.Resources.SBControl_ProfileFilePath;
-            var sbControlProfileRegPath = Properties.Resources.SBControl_ProfileRegPath;
-
-            //full path to profile folder
-            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var sbPath = userProfile + @"\" + sbControlProfileFilePath;
-
-            //get folder name of subfolder/deviceID (HDAUDIO_VEN_10EC_DEV_0899_SUBSYS_11020041 etc)
-            var sbGetIdDir = Directory.GetDirectories(sbPath, "HDAUDIO*", SearchOption.TopDirectoryOnly);
-            var sbDeviceIdPath = string.Join("", sbGetIdDir);
-            var sbDeviceId = sbDeviceIdPath.Substring(sbDeviceIdPath.LastIndexOf(@"\", StringComparison.Ordinal) + 1);
-
-            //get registry key value for active profile using deviceID
-            var sbRegKeyName = sbControlProfileRegPath + sbDeviceId;
-            var sbGetValue = ConfigManager.RegReadKeyValue(sbRegKeyName, "Profile");
-            var sbRegKeyValue = sbGetValue.Substring(sbGetValue.LastIndexOf(@"\", StringComparison.Ordinal) + 1);
-
-            //read profile xml and extract profile_name value
-            var fullXmlFilePath = sbDeviceIdPath + @"\" + sbRegKeyValue;
-            _sbControlActiveProfile = ConfigManager.XmlRead(fullXmlFilePath);
         }
 
         private void SetAppTheme()
@@ -229,26 +204,14 @@ namespace MiToolz
 
             if (activePLvalue > defaultPLvalue)
             {
-                GpuProfileBadge.Badge = " Overclock ";
+                GpuProfileBadge.Badge = " Overclock Profile ";
             }
             else
             {
-                GpuProfileBadge.Badge = " Default ";
+                GpuProfileBadge.Badge = " Default Profile ";
             }
 
             showProfileProcess.WaitForExit();
-        }
-
-        //show which Audio profile is active
-        private void ShowActiveAudioProfile()
-        {
-            var soundBlasterActiveProfile = " " + _sbControlActiveProfile + " ";
-            var soundBlasterBadge = AudioProfileBadge.Badge.ToString();
-
-            if (soundBlasterBadge != soundBlasterActiveProfile)
-            {
-                AudioProfileBadge.Badge = " " + _sbControlActiveProfile + " ";
-            }
         }
 
         //show which Power Plan is active
@@ -275,11 +238,11 @@ namespace MiToolz
 
             if (activePlan.Contains(_powerPlanBalanced))
             {
-                _activePowerPlan = " " + "Balanced" + " ";
+                _activePowerPlan = " " + "Balanced Profile" + " ";
             }
             if (activePlan.Contains(_powerPlanPerformance))
             {
-                _activePowerPlan = " " + "Performance" + " ";
+                _activePowerPlan = " " + "High Performance Profile" + " ";
             }
 
             if (PowerPlanBadge.ToString() != _activePowerPlan)
@@ -584,10 +547,10 @@ namespace MiToolz
 
             switch (badgeString)
             {
-                case " Overclock ":
+                case " Overclock Profile ":
                     ApplyProfile("SetStock");
                     break;
-                case " Default ":
+                case " Default Profile ":
                     ApplyProfile("SetOC");
                     break;
             }
@@ -642,10 +605,10 @@ namespace MiToolz
 
             switch (badgeString)
             {
-                case " Balanced ":
+                case " Balanced Profile ":
                     ApplyPowerPlan(_powerPlanPerformance);
                     break;
-                case " Performance ":
+                case " High Performance Profile ":
                     ApplyPowerPlan(_powerPlanBalanced);
                     break;
             }
@@ -1003,10 +966,10 @@ namespace MiToolz
             {
                 switch (PowerPlanBadge.Badge.ToString())
                 {
-                    case " Performance " when GpuProfileBadge.Badge.ToString() == " Default ":
+                    case " High Performance Profile " when GpuProfileBadge.Badge.ToString() == " Default Profile ":
                         GpuTile_OnClick(sender, e);
                         break;
-                    case " Balanced " when GpuProfileBadge.Badge.ToString() == " Overclock ":
+                    case " Balanced Profile " when GpuProfileBadge.Badge.ToString() == " Overclock Profile ":
                         PowerPlanTile_OnCLick(sender, e);
                         break;
                     default:
@@ -1045,7 +1008,6 @@ namespace MiToolz
         private void MainWindow_Activated(object sender, EventArgs e)
         {
             ReadSettings();
-            ShowActiveAudioProfile();
             ShowActiveGpuProfile();
             ShowActivePowerPlan();
             ShowDefaultAudioDevice();

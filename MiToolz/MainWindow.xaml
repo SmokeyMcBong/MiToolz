@@ -236,7 +236,7 @@
         </Separator>
         <mah:Tile x:Name="GpuTile"
                   Click="GpuTile_OnClick"
-                  Title="GPU Profile"
+                  Title="MSI GPU Profile"
                   TitleFontSize="17"
                   HorizontalTitleAlignment="Right"
                   Margin="267,50,0,0"
@@ -246,7 +246,8 @@
                   Height="162"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
-                  IsTabStop="False">
+                  IsTabStop="False"
+                  Width="202">
             <mah:Badged x:Name="GpuProfileBadge"
                         Badge=""
                         BadgeForeground="Black"
@@ -261,17 +262,18 @@
         </mah:Tile>
         <mah:Tile x:Name="PowerPlanTile"
                   Click="PowerPlanTile_OnCLick"
-                  Title="Power Plan"
+                  Title="Windows Power Plan"
                   TitleFontSize="17"
                   HorizontalTitleAlignment="Right"
-                  Margin="557,50,0,0"
+                  Margin="474,50,0,0"
                   mah:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   Background="{DynamicResource MahApps.Brushes.Accent}"
                   Cursor="Hand"
                   Height="162"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
-                  IsTabStop="False">
+                  IsTabStop="False"
+                  Width="223">
             <mah:Badged x:Name="PowerPlanBadge"
                         Badge=""
                         BadgeForeground="Black"
@@ -280,31 +282,6 @@
                 <Image VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        Source="pack://siteoforigin:,,,/Resources/Image_PowerPlan.png"
-                       Width="130"
-                       Height="130" />
-            </mah:Badged>
-        </mah:Tile>
-        <mah:Tile x:Name="AudioTile"
-                  Click="AudioTile_OnClick"
-                  Title="Audio Profile"
-                  TitleFontSize="17"
-                  HorizontalTitleAlignment="Right"
-                  Margin="412,50,0,0"
-                  mah:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
-                  Background="{DynamicResource MahApps.Brushes.Accent}"
-                  Cursor="Hand"
-                  Height="162"
-                  VerticalAlignment="Top"
-                  HorizontalAlignment="Left"
-                  IsTabStop="False">
-            <mah:Badged x:Name="AudioProfileBadge"
-                        Badge=""
-                        BadgeForeground="Black"
-                        BadgePlacementMode="Top"
-                        BadgeBackground="DarkGray">
-                <Image VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       Source="pack://siteoforigin:,,,/Resources/Image_Audio.png"
                        Width="130"
                        Height="130" />
             </mah:Badged>
@@ -319,7 +296,7 @@
                   Background="{DynamicResource MahApps.Brushes.Accent}"
                   Cursor="Hand"
                   Height="108"
-                  Width="213"
+                  Width="241"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
                   IsTabStop="False">
@@ -329,12 +306,11 @@
                         BadgePlacementMode="Top"
                         BadgeBackground="DarkGray"
                         Height="76">
-            <Image VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
+                <Image VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
                        Source="pack://siteoforigin:,,,/Resources/Image_TimerResolution.png"
-                       Width="90"
-                       Height="74"
-                       Margin="0,2,0,0" />
+                       Width="99"
+                       Height="76" />
             </mah:Badged>
         </mah:Tile>
         <mah:Tile x:Name="AudioDeviceSwitchTile"
@@ -342,12 +318,12 @@
                   Title="Audio Output Device"
                   TitleFontSize="14"
                   HorizontalTitleAlignment="Right"
-                  Margin="485,217,0,0"
+                  Margin="513,217,0,0"
                   mah:ControlsHelper.MouseOverBorderBrush="{DynamicResource MahApps.Brushes.ThemeForeground}"
                   Background="{DynamicResource MahApps.Brushes.Accent}"
                   Cursor="Hand"
                   Height="108"
-                  Width="212"
+                  Width="184"
                   VerticalAlignment="Top"
                   HorizontalAlignment="Left"
                   IsTabStop="False">
