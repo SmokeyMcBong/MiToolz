@@ -136,16 +136,6 @@ namespace MiToolz.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Image_Audio {
-            get {
-                object obj = ResourceManager.GetObject("Image_Audio", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Image_DeviceSwitcher {
             get {
                 object obj = ResourceManager.GetObject("Image_DeviceSwitcher", resourceCulture);

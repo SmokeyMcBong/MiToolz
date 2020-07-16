@@ -161,11 +161,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Image_Audio.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Image_GPU.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
