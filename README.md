@@ -31,6 +31,10 @@ NirCmd > https://www.nirsoft.net/utils/nircmd.html
   - GPU Core Temperature
   - CPU Core Speed
   - CPU Core Temperature
+6. Built in Hotkey's for 'Game Mode', 'Audio Device Switch' and 'Exit application'
+  - 'Game Mode' will set/toggle GPU Profile and Windows Power Plan quickly using just one button press (default is [G])
+  - 'Audio Device' will set/toggle between two Audio Output Devices quickly using just one button press (default is [A])
+  - 'Exit application' will quit the MiToolz application using just a single button press (default is [Q])
 
 ## Screens >
 
